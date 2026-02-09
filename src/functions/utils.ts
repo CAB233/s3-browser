@@ -31,16 +31,14 @@ export const parseDate = (date: string | Date | undefined): Date => {
 };
 
 export const toHumanReadableSize = (size: number): string => {
+  if (size === 0) {
+    return '0 B';
+  }
   const units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB'];
   let unitIndex = 0;
   while (size >= 1024) {
     size /= 1024;
     unitIndex += 1;
   }
-  return `${size.toFixed(2)} ${units[unitIndex]}`;
-};
-
-export const parseIntOr = (str: string, defaultValue: number): number => {
-  const parsed = parseInt(str, 10);
-  return isNaN(parsed) ? defaultValue : parsed;
+  return `${size.toFixed(1)} ${units[unitIndex]}`;
 };

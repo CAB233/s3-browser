@@ -1,22 +1,23 @@
 ---
-import { getEnv } from '../functions/environment';
+import { DISABLE_SE_INDEX } from "../functions/environment";
 
 interface Props {
   title: string;
 }
 
 const { title } = Astro.props;
-const disableIndexing =
-  getEnv('ALLOW_SE_INDEX', 'false').toLowerCase() === 'false';
+const disableSEIndexing = DISABLE_SE_INDEX;
 ---
 
 <!doctype html>
-<html lang='en'>
+<html>
   <head>
-    <meta charset='UTF-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    {disableIndexing && <meta name='robots' content='noindex, nofollow' />}
     <title>{title}</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {disableSEIndexing && <meta name="robots" content="noindex, nofollow" />}
   </head>
   <body>
     <slot />
@@ -30,16 +31,12 @@ const disableIndexing =
     box-sizing: border-box;
   }
 
-  .center {
-    text-align: center;
-  }
   body {
-    font-family: system-ui, sans-serif;
+    font-family: Inter, system-ui, sans-serif;
     font-size: 16px;
     text-rendering: optimizespeed;
     background-color: #f3f6f7;
     min-height: 100vh;
-    overflow-y: scroll;
   }
 
   img,
@@ -112,8 +109,6 @@ const disableIndexing =
   .size,
   .timestamp {
     font-size: 14px;
-    min-width: 13rem;
-    font-family: monospace, monospace;
   }
 
   .grid .size {
@@ -217,6 +212,21 @@ const disableIndexing =
     background: none;
   }
 
+  .layout-toggle {
+    display: flex;
+    gap: 1em;
+  }
+
+  .layout {
+    display: flex;
+    align-items: center;
+    gap: 0.2em;
+  }
+
+  .sort-header svg {
+    margin-right: 0.25em;
+  }
+
   .layout,
   .layout svg {
     color: #9a9a9a;
@@ -236,10 +246,6 @@ const disableIndexing =
   tbody tr:hover,
   .grid .entry a:hover {
     background-color: #f4f9fd;
-  }
-
-  .monospace {
-    font-family: monospace, monospace;
   }
 
   th,
@@ -364,10 +370,8 @@ const disableIndexing =
     font-size: 12px;
     text-align: center;
   }
-  .center {
-    text-align: center;
-  }
-  .caddy-logo {
+
+  .cloudflare-logo {
     display: inline-block;
     height: 2.5em;
     margin: 0 auto;
@@ -402,6 +406,99 @@ const disableIndexing =
 
     .grid .entry {
       max-width: initial;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    html {
+      background: black; /* overscroll */
+    }
+
+    body {
+      background: linear-gradient(180deg, rgb(34 50 66) 0%, rgb(26 31 38) 100%);
+      background-attachment: fixed;
+    }
+
+    body,
+    a,
+    svg,
+    .layout.current,
+    .layout.current svg,
+    .go-up {
+      color: #ccc;
+    }
+
+    h1 a,
+    th a {
+      color: white;
+    }
+
+    h1 {
+      color: white;
+    }
+
+    h1 a:hover {
+      background: hsl(213deg 100% 73% / 20%);
+    }
+
+    header,
+    main,
+    .grid .entry {
+      background-color: #101720;
+    }
+
+    tbody tr:hover,
+    .grid .entry a:hover {
+      background-color: #162030;
+      color: #fff;
+    }
+
+    th {
+      background-color: #18212c;
+    }
+
+    td a,
+    .listing .icon-tabler {
+      color: #abc8e3;
+    }
+
+    td a:hover,
+    td a:hover .icon-tabler {
+      color: white;
+    }
+
+    td a:visited {
+      color: #cd53cd;
+    }
+
+    td a:visited:hover {
+      color: #f676f6;
+    }
+
+    #search-icon {
+      color: #7798c4;
+    }
+
+    #filter {
+      color: #ffffff;
+      border: 1px solid #29435c;
+    }
+
+    .meta {
+      border-bottom: 1px solid #222e3b;
+    }
+
+    .sizebar-bar {
+      background-color: #1f3549;
+    }
+
+    .grid .entry a {
+      background-color: #080b0f;
+    }
+
+    #Wordmark path,
+    #Wordmark polygon {
+      fill: #ccc !important;
     }
   }
 </style>

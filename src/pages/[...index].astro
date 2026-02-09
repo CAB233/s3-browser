@@ -4,19 +4,20 @@ import IndexPage from '../components/IndexPage.astro';
 import FourOhFour from '../components/FourOhFour.astro';
 import { getBreadcrumb } from '../functions/breadcrumb';
 import { listBucket } from '../functions/s3';
-import { ensureEnv, copyEnv } from '../functions/environment';
-
-const astroLocals = Astro.locals as any;
-const kv = astroLocals?.runtime?.env?.CFKV;
-
-copyEnv(astroLocals?.runtime?.env);
-ensureEnv();
+import { parseViewParams, sortEntries } from '../functions/sort';
 
 const requestPath = decodeURIComponent(Astro.url.pathname);
 const breadCrums = getBreadcrumb(requestPath);
-const fsListing = await listBucket(requestPath, kv);
+const fsListing = await listBucket(requestPath);
 const totalCount = fsListing.numDirectories + fsListing.numFiles;
-const title = totalCount > 0 ? `Index of ${requestPath}` : '404 - Not Found';
+const title = totalCount > 0 ? `${requestPath}` : '404 - Not Found';
+const viewParams = parseViewParams(Astro.url);
+const sortedEntries = sortEntries(
+  fsListing.entries,
+  viewParams.sort,
+  viewParams.order,
+);
+const sortedFsListing = { ...fsListing, entries: sortedEntries };
 ---
 
 <Layout title={title}>
@@ -24,8 +25,9 @@ const title = totalCount > 0 ? `Index of ${requestPath}` : '404 - Not Found';
     (!!totalCount && (
       <IndexPage
         breadCrums={breadCrums}
-        fsListing={fsListing}
+        fsListing={sortedFsListing}
         requestPath={requestPath}
+        viewParams={viewParams}
       />
     )) || <FourOhFour />
   }

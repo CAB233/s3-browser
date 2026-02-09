@@ -1,19 +1,33 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
-import node from '@astrojs/node';
 
-import type { AstroIntegration } from 'astro';
-
-const getAdapter = (): AstroIntegration => {
-  const adapterMapping: { [key: string]: AstroIntegration } = {
-    cloudflare: cloudflare(),
-    node: node({ mode: 'standalone' }),
-  };
-  return adapterMapping[process.env.ADAPTER || ''] || adapterMapping.node;
-};
-
-// https://astro.build/config
 export default defineConfig({
   output: 'server',
-  adapter: getAdapter(),
+  adapter: cloudflare({
+    imageService: 'passthrough',
+  }),
+  env: {
+    schema: {
+      BUCKET_NAME: envField.string({ context: 'server', access: 'secret' }),
+      BUCKET_ENDPOINT: envField.string({ context: 'server', access: 'secret' }),
+      BUCKET_REGION: envField.string({ context: 'server', access: 'secret' }),
+      BUCKET_ACCESS_KEY_ID: envField.string({
+        context: 'server',
+        access: 'secret',
+      }),
+      BUCKET_SECRET_ACCESS_KEY: envField.string({
+        context: 'server',
+        access: 'secret',
+      }),
+      BUCKET_DOWNLOAD_URL: envField.string({
+        context: 'server',
+        access: 'secret',
+      }),
+      DISABLE_SE_INDEX: envField.boolean({
+        context: 'server',
+        access: 'public',
+        default: true,
+      }),
+    },
+  },
 });

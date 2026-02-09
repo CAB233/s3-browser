@@ -1,16 +1,37 @@
 ---
 import Icon from './Icon.astro';
 import Up from '../icons/up.svg?raw';
+import CF from '../icons/cloudflare.svg?raw';
+import Search from '../icons/search.svg?raw';
+import List from '../icons/list.svg?raw';
+import Grid from '../icons/grid.svg?raw';
 import type { BreadcrumbEntry } from '../functions/breadcrumb';
 import type { FSListing } from '../functions/s3';
+import { buildSortUrl, getSortIndicator, type ViewParams } from '../functions/sort';
 
 interface Props {
   breadCrums: BreadcrumbEntry[];
   requestPath: string;
   fsListing: FSListing;
+  viewParams: ViewParams;
 }
 
-const { breadCrums, fsListing, requestPath } = Astro.props;
+const { breadCrums, fsListing, requestPath, viewParams } = Astro.props;
+const { layout, sort, order } = viewParams;
+
+// Build URLs for layout toggle
+const listUrl = buildSortUrl(requestPath, viewParams, undefined, undefined, 'list');
+const gridUrl = buildSortUrl(requestPath, viewParams, undefined, undefined, 'grid');
+
+// Build URLs for sort headers
+const nameSortUrl = buildSortUrl(requestPath, viewParams, 'name');
+const sizeSortUrl = buildSortUrl(requestPath, viewParams, 'size');
+const timeSortUrl = buildSortUrl(requestPath, viewParams, 'time');
+
+// Get sort indicators
+const nameIndicator = getSortIndicator('name', sort, order);
+const sizeIndicator = getSortIndicator('size', sort, order);
+const timeIndicator = getSortIndicator('time', sort, order);
 ---
 
 <header>
@@ -32,82 +53,242 @@ const { breadCrums, fsListing, requestPath } = Astro.props;
     </h1>
   </div>
 </header>
+
 <div class='wrapper'>
   <main>
     <div class='meta'>
       <div id='summary'>
         <span class='meta-item'>
-          <b>{fsListing.numDirectories}</b> directories
+          <b>{fsListing.numDirectories}</b>
+          {fsListing.numDirectories === 1 ? 'directory' : 'directories'}
         </span>
         <span class='meta-item'>
-          <b>{fsListing.numFiles}</b> files
+          <b>{fsListing.numFiles}</b>
+          {fsListing.numFiles === 1 ? 'file' : 'files'}
+        </span>
+        <span class='meta-item'>
+          <b>{fsListing.numTotal}</b> total
         </span>
       </div>
+      <div class='layout-toggle'>
+        <a href={listUrl} class={`layout ${layout === 'list' ? 'current' : ''}`}>
+          <Fragment set:html={List} />
+          List
+        </a>
+        <a href={gridUrl} class={`layout ${layout === 'grid' ? 'current' : ''}`}>
+          <Fragment set:html={Grid} />
+          Grid
+        </a>
+      </div>
     </div>
-    <div class='listing'>
-      <table aria-describedby='summary'>
-        <thead>
-          <tr>
-            <th></th>
-            <th> Name </th>
-            <th class='center'> Size </th>
-            <th class='hideable center'> Last Modified </th>
-            <th class='hideable'></th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            requestPath != '/' && (
-              <tr>
-                <td />
-                <td>
-                  <a href='..'>
-                    <Fragment set:html={Up} />
-                    <span class='go-up'>Up</span>
-                  </a>
-                </td>
-                <td />
-                <td class='hideable' />
-                <td class='hideable' />
-              </tr>
-            )
-          }
+
+    {layout === 'list' ? (
+      <!-- List View -->
+      <div class='listing'>
+        <table aria-describedby='summary'>
+          <thead>
+            <tr>
+              <th></th>
+              <th>
+                <a href={nameSortUrl} class='sort-header'><Fragment set:html={nameIndicator} />Name</a>
+                <div class='filter-container'>
+                  <Fragment set:html={Search} />
+                  <input type='search' placeholder='Search' id='filter' />
+                </div>
+              </th>
+              <th>
+                <a href={sizeSortUrl} class='sort-header'>Size<Fragment set:html={sizeIndicator} /></a>
+              </th>
+              <th class='hideable'>
+                <a href={timeSortUrl} class='sort-header'>Modified<Fragment set:html={timeIndicator} /></a>
+              </th>
+              <th class='hideable'></th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              requestPath != '/' && (
+                <tr>
+                  <td />
+                  <td>
+                    <a href='..'>
+                      <Fragment set:html={Up} />
+                      <span class='go-up'>Up</span>
+                    </a>
+                  </td>
+                  <td />
+                  <td class='hideable' />
+                  <td class='hideable' />
+                </tr>
+              )
+            }
+            {
+              fsListing.entries.map((entry) => {
+                return (
+                  <tr class='file'>
+                    <td />
+                    <td>
+                      <a href={entry.anchor}>
+                        <Icon entry={entry} />
+                        <span class='name'>{entry.name}</span>
+                      </a>
+                    </td>
+                    {!!(entry as any).size || (entry as any).size === 0 ? (
+                      <td class='size' data-size={(entry as any).size}>
+                        <div class='sizebar'>
+                          <div class='sizebar-bar' />
+                          <div class='sizebar-text'>
+                            {entry.humanReadableSize}
+                          </div>
+                        </div>
+                      </td>
+                    ) : (
+                      <td class='size'>&mdash;</td>
+                    )}
+                    {(!!entry.lastModified && (
+                      <td class='timestamp hideable'>
+                        <time datetime={entry.lastModified?.toISOString()}>
+                          {entry.lastModified?.toLocaleString()}
+                        </time>
+                      </td>
+                    )) || <td class='timestamp hideable'>&mdash;</td>}
+                    <td class='hideable' />
+                  </tr>
+                );
+              })
+            }
+          </tbody>
+        </table>
+      </div>
+    ) : (
+      <!-- Grid View -->
+      <div class='listing'>
+        {
+          requestPath != '/' && (
+            <div class='entry'>
+              <a href='..'>
+                <Fragment set:html={Up} />
+                <span class='go-up'>Up</span>
+              </a>
+            </div>
+          )
+        }
+        <div class='grid'>
           {
             fsListing.entries.map((entry) => {
               return (
-                <tr class='file'>
-                  <td />
-                  <td>
-                    <a href={entry.anchor}>
-                      <Icon entry={entry} />
-                      <span class='name'>{entry.name}</span>
-                    </a>
-                  </td>
-                  {!!(entry as any).size ? (
-                    <td class='size center'>
-                      <div>
-                        <div class='sizebar-text'>
-                          {entry.humanReadableSize}
-                        </div>
-                      </div>
-                    </td>
-                  ) : (
-                    <td class='size center'>&mdash;</td>
-                  )}
-                  {(!!entry.lastModified && (
-                    <td class='timestamp hideable center'>
-                      <time datetime={entry.lastModified?.toISOString()}>
-                        {entry.lastModified?.toISOString()}
-                      </time>
-                    </td>
-                  )) || <td class='timestamp hideable center'>&mdash;</td>}
-                  <td class='hideable' />
-                </tr>
+                <div class='entry'>
+                  <a href={entry.anchor}>
+                    <Icon entry={entry} />
+                    <span class='name'>{entry.name}</span>
+                    {entry.type === 'file' && (
+                      <span class='size'>{entry.humanReadableSize}</span>
+                    )}
+                  </a>
+                </div>
               );
             })
           }
-        </tbody>
-      </table>
-    </div>
+        </div>
+      </div>
+    )}
   </main>
 </div>
+
+<footer>
+  Served with&nbsp;
+  <a rel='noopener noreferrer' href='https://www.cloudflare.com' aria-label="cloudflare-logo">
+    <Fragment set:html={CF} />
+  </a>
+</footer>
+
+<script is:inline>
+  // @license magnet:?xt=urn:btih:8e4f440f4c65981c5bf93c76d35135ba5064d8b7&dn=apache-2.0.txt Apache-2.0
+  const filterEl = document.getElementById('filter');
+  filterEl?.focus({ preventScroll: true });
+
+  function initPage() {
+    if (filterEl) {
+      const filterParam = new URL(window.location.href).searchParams.get(
+        'filter',
+      );
+      if (filterParam) {
+        filterEl.value = filterParam;
+      }
+    }
+    filter();
+
+    // fill in size bars
+    const sizeEls = document.querySelectorAll('.size[data-size]');
+    let largest = 0;
+    sizeEls.forEach(
+      (el) => (largest = Math.max(largest, Number(el.dataset.size))),
+    );
+    sizeEls.forEach((el) => {
+      const size = Number(el.dataset.size);
+      const sizebar = el.querySelector('.sizebar-bar');
+      if (sizebar) {
+        sizebar.style.width = `${(size / largest) * 100}%`;
+      }
+    });
+  }
+
+  function filter() {
+    if (!filterEl) return;
+    const q = filterEl.value.trim().toLowerCase();
+    // For list view
+    document.querySelectorAll('tr.file').forEach(function (el) {
+      if (!q) {
+        el.style.display = '';
+        return;
+      }
+      const nameEl = el.querySelector('.name');
+      const nameVal = nameEl?.textContent?.trim().toLowerCase() || '';
+      if (nameVal.indexOf(q) !== -1) {
+        el.style.display = '';
+      } else {
+        el.style.display = 'none';
+      }
+    });
+    // For grid view
+    document.querySelectorAll('.grid .entry').forEach(function (el) {
+      if (!q) {
+        el.style.display = '';
+        return;
+      }
+      const nameEl = el.querySelector('.name');
+      const nameVal = nameEl?.textContent?.trim().toLowerCase() || '';
+      if (nameVal.indexOf(q) !== -1) {
+        el.style.display = '';
+      } else {
+        el.style.display = 'none';
+      }
+    });
+  }
+
+  const filterElem = document.getElementById('filter');
+  if (filterElem) {
+    filterElem.addEventListener('keyup', filter);
+  }
+
+  window.addEventListener('load', initPage);
+
+  function localizeDatetime(e) {
+    if (e.textContent === undefined) {
+      return;
+    }
+    var d = new Date(e.getAttribute('datetime'));
+    if (isNaN(d)) {
+      d = new Date(e.textContent);
+      if (isNaN(d)) {
+        return;
+      }
+    }
+    e.textContent = d.toLocaleString();
+  }
+  var timeList = Array.prototype.slice.call(
+    document.getElementsByTagName('time'),
+  );
+  timeList.forEach(localizeDatetime);
+  // @license-end
+</script>

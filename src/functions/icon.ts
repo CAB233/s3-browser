@@ -1,4 +1,4 @@
-import type { Entry } from './s3';
+import type { Entry } from './s3.ts';
 
 import Archive from '../icons/archive.svg?raw';
 import Audio from '../icons/audio.svg?raw';

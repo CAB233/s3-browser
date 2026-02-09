@@ -1,8 +1,16 @@
-name="your-worker-name"
-account_id = "your-account-id"
-main = "dist/_worker.js"
-compatibility_date = "2024-05-25"
+name = "bucketlist"
+main = "dist/_worker.js/index.js"
+compatibility_date = "2026-02-04"
+minify = true
+workers_dev = false
 
-kv_namespaces = [
-    { binding = "CFKV", id="your-kv-id"}
-]
+[placement]
+mode = "smart"
+
+[assets]
+directory = "./dist"
+not_found_handling = "single-page-application"
+
+[[routes]]
+pattern = "<subdomain.example.com>/*"
+zone_name = "<example.com>"
