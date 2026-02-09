@@ -1,53 +1,93 @@
-# bucketlist
+# s3-browser
 
-List any S3 compatible bucket's content as an index page.
+   English | [简体中文](./README.zh.md)
+
+   List any S3 compatible bucket's content as an index page. Built with Astro and running on Cloudflare.
+
+## Screenshot
+
+![](./assets/screenshot.png)
+
+## Features
+
+- **Bucket Index**: List contents of any S3-compatible storage as a web index
+- **Cloudflare Pages**: Serverless deployment on Cloudflare Pages
+- **Clean UI**: Simple and clean interface inspired by CaddyServer
+- **Direct Download**: Configurable public download URL for objects
+
+## Tech Stack
+
+- **Framework**: [Astro](https://astro.build/)
+- **Platform**: [Cloudflare Pages](https://pages.cloudflare.com/)
+- **Runtime**: [Deno](https://deno.com/)
+- **S3 Client**: [S3mini](https://github.com/denosaurs/s3mini)
+- **Type Safety**: [TypeScript](https://www.typescriptlang.org/)
 
 ## Usage
 
-Clone the repository and run the following command:
+### Local Development
 
-```bash
-git clone git@github.com:rafiibrahim8/bucketlist.git
-cd bucketlist
-```
+1. Clone the repository
+   ```bash
+   git clone https://github.com/CAB233/s3-browser.git
+   cd s3-browser
+   ```
 
-Install the required packages:
+2. Install dependencies
+   ```bash
+   deno install
+   ```
 
-```bash
-pnpm install
-```
+3. Configure Environment Variables
 
-Copy the `.env.example` file to `.env` and fill in the required information:
+   Copy `.dev.vars.example` to `.dev.vars` and fill in your S3 credentials.
 
-Run the application:
+4. Run the application
+   ```bash
+   deno task dev
+   ```
 
-```bash
-pnpm start
-```
+### Deploy to Cloudflare
 
-## Using Cloudflare KV
+1. Configure Wrangler configuration file
 
-Normally listing all content of a bucket is an expensive operation. To reduce the cost, you can use Cloudflare KV to cache the bucket's content. To use Cloudflare KV, you need to have a Cloudflare account and a KV namespace.
+   Copy `wrangler.toml.example` to `wrangler.toml` and configure your Cloudflare settings.
 
-To run the application with Cloudflare KV, it needs [wrangler](https://developers.cloudflare.com/workers/cli-wrangler/install-update) installed.
+2. Configure Secrets
 
-You need to copy the `wrangler.toml.example` file to `wrangler.toml` and fill in the required information.
+   Before deploying, ensure you have set the required secret environment variables in your Cloudflare dashboard or via wrangler:
+   ```bash
+   deno run npm:wrangler secret put BUCKET_NAME
+   deno run npm:wrangler secret put BUCKET_ENDPOINT
+   deno run npm:wrangler secret put BUCKET_REGION
+   deno run npm:wrangler secret put BUCKET_ACCESS_KEY_ID
+   deno run npm:wrangler secret put BUCKET_SECRET_ACCESS_KEY
+   deno run npm:wrangler secret put BUCKET_DOWNLOAD_URL
+   ```
 
-Environment variables:
-| Name | Description | Required |
-|------|-------------|----------|
-| `BUCKET_NAME` | The name of the bucket. | Yes |
-| `BUCKET_ENDPOINT` | The endpoint of the bucket. | Yes |
-| `BUCKET_REGION` | The region of the bucket. | Yes |
-| `BUCKET_ACCESS_KEY_ID` | The access key ID of the bucket. | Yes |
-| `BUCKET_SECRET_ACCESS_KEY` | The secret access key of the bucket. | Yes |
-| `BUCKET_DOWNLOAD_URL` | A publicly accessible URL to download the object. | Yes |
-| `BUCKET_USE_KV` | Set to `true` to use Cloudflare KV. Default is `false`. | No |
-| `KV_CACHE_TTL_SEC` | The time-to-live of the cache in seconds. Default is 6 hours. | No |
-| `ALLOW_SE_INDEX` | Set to `true` to allow search engine indexing. Default is `false`. | No |
+3. Build and Deploy
+   ```bash
+   deno task build
+   deno task deploy
+   ```
+
+## Environment Variables
+
+| Name | Description | Required | Default |
+|------|-------------|----------|---------|
+| `BUCKET_NAME` | The name of the bucket. | Yes | - |
+| `BUCKET_ENDPOINT` | The endpoint of the bucket. | Yes | - |
+| `BUCKET_REGION` | The region of the bucket. | Yes | - |
+| `BUCKET_ACCESS_KEY_ID` | The access key ID of the bucket. | Yes | - |
+| `BUCKET_SECRET_ACCESS_KEY` | The secret access key of the bucket. | Yes | - |
+| `BUCKET_DOWNLOAD_URL` | A publicly accessible URL to download objects. | Yes | - |
+| `DISABLE_SE_INDEX` | Set to `true` to disable search engine indexing. | No | `true` |
 
 ## License
+
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgements
-[CaddyServer](https://github.com/caddyserver) for their [html template](https://github.com/caddyserver/caddy/blob/master/modules/caddyhttp/fileserver/browse.html) for listing the bucket's content.
+
+- [CaddyServer](https://github.com/caddyserver) for their [html template](https://github.com/caddyserver/caddy/blob/master/modules/caddyhttp/fileserver/browse.html) design.
+- Forked from [rafiibrahim8/bucketlist](https://github.com/rafiibrahim8/bucketlist).
