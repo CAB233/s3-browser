@@ -54,8 +54,19 @@ const timeIndicator = getSortIndicator('time', sort, order);
   </div>
 </header>
 
+{layout === 'grid' && (
+  <style>
+    .wrapper {
+      max-width: none;
+    }
+    main {
+      margin-top: 1px;
+    }
+  </style>
+)}
+
 <div class='wrapper'>
-  <main>
+  <main data-view={layout}>
     <div class='meta'>
       <div id='summary'>
         <span class='meta-item'>
@@ -163,16 +174,6 @@ const timeIndicator = getSortIndicator('time', sort, order);
     ) : (
       <!-- Grid View -->
       <div class='listing'>
-        {
-          requestPath != '/' && (
-            <div class='entry'>
-              <a href='..'>
-                <Fragment set:html={Up} />
-                <span class='go-up'>Up</span>
-              </a>
-            </div>
-          )
-        }
         <div class='grid'>
           {
             fsListing.entries.map((entry) => {
