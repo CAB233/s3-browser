@@ -67,6 +67,26 @@ const disableSEIndexing = DISABLE_SE_INDEX;
     text-decoration: none;
   }
 
+  /*#layout-list,
+  #layout-grid {
+    cursor: pointer;
+  }*/
+
+  .layout-toggle {
+    display: flex;
+    gap: 1em;
+  }
+
+  .layout {
+    display: flex;
+    align-items: center;
+    gap: 0.2em;
+  }
+
+  .sort-header svg {
+    margin-right: 0.25em;
+  }
+
   .wrapper {
     max-width: 1200px;
     margin-left: auto;
@@ -212,21 +232,6 @@ const disableSEIndexing = DISABLE_SE_INDEX;
     background: none;
   }
 
-  .layout-toggle {
-    display: flex;
-    gap: 1em;
-  }
-
-  .layout {
-    display: flex;
-    align-items: center;
-    gap: 0.2em;
-  }
-
-  .sort-header svg {
-    margin-right: 0.25em;
-  }
-
   .layout,
   .layout svg {
     color: #9a9a9a;
@@ -292,7 +297,7 @@ const disableSEIndexing = DISABLE_SE_INDEX;
 
   .name,
   .go-up {
-    word-break: break-word;
+    word-break: break-all;
     overflow-wrap: break-word;
     white-space: pre-wrap;
   }
