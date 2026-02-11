@@ -2,18 +2,9 @@
 
    [English](./README.md) | 简体中文
 
-   将任何兼容 S3 的存储桶内容列为索引页面。基于 Astro 构建，并运行在 Cloudflare 上。
-
 ## 截图预览
 
 ![](./assets/screenshot.png)
-
-## 功能特点
-
-- **存储桶索引**: 将任何 S3 兼容存储的内容列为网页索引
-- **Cloudflare Pages**: 在 Cloudflare Pages 上无服务器部署
-- **简洁界面**: 简洁美观的界面设计，灵感来源于 CaddyServer
-- **直接下载**: 可配置对象的公开下载链接
 
 ## 技术栈
 
@@ -85,7 +76,7 @@
 
 ## 许可证
 
-本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件。
+MIT
 
 ## 致谢
 

@@ -2,18 +2,9 @@
 
    English | [简体中文](./README.zh.md)
 
-   List any S3 compatible bucket's content as an index page. Built with Astro and running on Cloudflare.
-
 ## Screenshot
 
 ![](./assets/screenshot.png)
-
-## Features
-
-- **Bucket Index**: List contents of any S3-compatible storage as a web index
-- **Cloudflare Pages**: Serverless deployment on Cloudflare Pages
-- **Clean UI**: Simple and clean interface inspired by CaddyServer
-- **Direct Download**: Configurable public download URL for objects
 
 ## Tech Stack
 
@@ -85,7 +76,7 @@
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT
 
 ## Acknowledgements
 
