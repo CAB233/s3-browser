@@ -1,5 +1,5 @@
-name = "bucketlist"
-main = "dist/_worker.js/index.js"
+name = "s3-browser"
+main = "./dist/_worker.js/index.js"
 compatibility_date = "2026-02-04"
 minify = true
 workers_dev = false
