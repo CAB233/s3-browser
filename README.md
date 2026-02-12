@@ -11,7 +11,7 @@
 - **Framework**: [Astro](https://astro.build/)
 - **Platform**: [Cloudflare Pages](https://pages.cloudflare.com/)
 - **Runtime**: [Deno](https://deno.com/)
-- **S3 Client**: [S3mini](https://github.com/denosaurs/s3mini)
+- **S3 Client**: [S3mini](https://github.com/good-lly/s3mini/)
 - **Type Safety**: [TypeScript](https://www.typescriptlang.org/)
 
 ## Usage

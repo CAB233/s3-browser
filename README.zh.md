@@ -11,7 +11,7 @@
 - **框架**: [Astro](https://astro.build/)
 - **平台**: [Cloudflare Pages](https://pages.cloudflare.com/)
 - **运行时**: [Deno](https://deno.com/)
-- **S3 客户端**: [S3mini](https://github.com/denosaurs/s3mini)
+- **S3 客户端**: [S3mini](https://github.com/good-lly/s3mini/)
 - **类型安全**: [TypeScript](https://www.typescriptlang.org/)
 
 ## 使用方法
