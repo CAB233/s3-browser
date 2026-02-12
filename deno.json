@@ -9,10 +9,10 @@
   "imports": {
     "@astrojs/check": "npm:@astrojs/check@^0.9.6",
     "@astrojs/cloudflare": "npm:@astrojs/cloudflare@^12.6.12",
-    "astro": "npm:astro@^5.17.1",
+    "astro": "npm:astro@^5.17.2",
     "s3mini": "npm:s3mini@^0.9.1",
     "typescript": "npm:typescript@^5.9.3",
-    "wrangler": "npm:wrangler@^4.63.0"
+    "wrangler": "npm:wrangler@^4.64.0"
   },
   "fmt": {
     "useTabs": false,
