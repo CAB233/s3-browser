@@ -14,7 +14,7 @@ import {
   BUCKET_NAME,
   BUCKET_REGION,
   BUCKET_SECRET_ACCESS_KEY,
-} from './environment.ts';
+} from './env.ts';
 
 export type Entry =
   | {
