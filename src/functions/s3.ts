@@ -153,11 +153,29 @@ export const listAllObjects = async (): Promise<S3Object[]> => {
     const objects = await client.listObjects();
     return objects ?? [];
   } catch (e) {
-    console.error('Error listing objects:', e);
+    const err = e as Error & {
+      status?: number;
+      serviceCode?: string;
+      code?: string;
+      body?: string;
+    };
+    if (err.status !== undefined && err.serviceCode !== undefined) {
+      console.error(
+        `S3 service error ${err.status}: ${err.serviceCode}`,
+        err.body,
+      );
+    } else if (
+      err.code &&
+      ['ENOTFOUND', 'EAI_AGAIN', 'ETIMEDOUT', 'ECONNREFUSED'].includes(
+        err.code,
+      )
+    ) {
+      console.error(`S3 network error: ${err.code}`);
+    } else {
+      console.error('Unexpected error listing objects:', e);
+    }
     throw e;
   }
-
-  return allObjects;
 };
 
 export const listBucket = async (
