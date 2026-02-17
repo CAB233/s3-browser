@@ -11,7 +11,6 @@ import {
   BUCKET_ACCESS_KEY_ID,
   BUCKET_DOWNLOAD_URL,
   BUCKET_ENDPOINT,
-  BUCKET_NAME,
   BUCKET_REGION,
   BUCKET_SECRET_ACCESS_KEY,
 } from './env.ts';
@@ -147,21 +146,12 @@ const objectListToFS = (
   return sortAndGetListing(unsortedEntries);
 };
 
-export const listAllObjects = async (
-  bucketName: string,
-): Promise<S3Object[]> => {
+export const listAllObjects = async (): Promise<S3Object[]> => {
   const client = getS3Client();
-  const allObjects: S3Object[] = [];
 
   try {
-    let token: string | undefined;
-    do {
-      const response = await client.listObjectsPaged(bucketName, token);
-      if (response?.objects) {
-        allObjects.push(...response.objects);
-      }
-      token = response?.nextContinuationToken;
-    } while (token);
+    const objects = await client.listObjects();
+    return objects ?? [];
   } catch (e) {
     console.error('Error listing objects:', e);
     throw e;
@@ -175,8 +165,6 @@ export const listBucket = async (
 ): Promise<FSListing> => {
   const normalizedPathT = '/' + strip(path, '/') + '/';
   const normalizedPath = normalizedPathT === '//' ? '/' : normalizedPathT;
-
-  console.log(`Fetching bucket list for ${BUCKET_NAME} at ${new Date()}`);
-  const allObjects = await listAllObjects(BUCKET_NAME);
+  const allObjects = await listAllObjects();
   return objectListToFS(allObjects, normalizedPath);
 };

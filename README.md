@@ -48,7 +48,6 @@
 
    Before deploying, ensure you have set the required secret environment variables in your Cloudflare dashboard or via wrangler:
    ```bash
-   deno run npm:wrangler secret put BUCKET_NAME
    deno run npm:wrangler secret put BUCKET_ENDPOINT
    deno run npm:wrangler secret put BUCKET_REGION
    deno run npm:wrangler secret put BUCKET_ACCESS_KEY_ID
@@ -66,7 +65,6 @@
 
 | Name | Description | Required | Default |
 |------|-------------|----------|---------|
-| `BUCKET_NAME` | The name of the bucket. | Yes | - |
 | `BUCKET_ENDPOINT` | The endpoint of the bucket. | Yes | - |
 | `BUCKET_REGION` | The region of the bucket. | Yes | - |
 | `BUCKET_ACCESS_KEY_ID` | The access key ID of the bucket. | Yes | - |

@@ -39,7 +39,6 @@ deno task dev:cloudflare
 
 ```bash
 # Set secrets for Cloudflare Pages
-deno run npm:wrangler secret put BUCKET_NAME
 deno run npm:wrangler secret put BUCKET_ENDPOINT
 deno run npm:wrangler secret put BUCKET_REGION
 deno run npm:wrangler secret put BUCKET_ACCESS_KEY_ID
@@ -194,7 +193,7 @@ Linting is configured in `deno.json` to include `src/` and exclude `dist/`.
 ## 4. Project Structure
 
 ```
-/home/lihua/projects/bucketlist
+/home/lihua/projects/s3-browser
 ├── src/
 │   ├── components/      # Astro UI components
 │   │   ├── IndexPage.astro    # Main listing component
@@ -205,7 +204,8 @@ Linting is configured in `deno.json` to include `src/` and exclude `dist/`.
 │   │   ├── sort.ts            # Sorting and view parameters
 │   │   ├── breadcrumb.ts      # Breadcrumb generation
 │   │   ├── utils.ts           # Utility functions
-│   │   └── environment.ts     # Environment variable exports
+│   │   ├── env.ts             # Environment variable exports
+│   │   └── icon.ts            # Icon helper functions
 │   ├── layouts/         # Astro layouts
 │   │   └── Layout.astro       # Main HTML layout with global styles
 │   ├── middleware/      # Astro middleware
@@ -232,7 +232,6 @@ Linting is configured in `deno.json` to include `src/` and exclude `dist/`.
 
 | Variable | Description | Context | Access |
 |----------|-------------|---------|--------|
-| `BUCKET_NAME` | S3 bucket name | server | secret |
 | `BUCKET_ENDPOINT` | S3 endpoint URL | server | secret |
 | `BUCKET_REGION` | S3 region | server | secret |
 | `BUCKET_ACCESS_KEY_ID` | AWS access key | server | secret |
@@ -262,4 +261,4 @@ deno run npm:wrangler secret put <VARIABLE_NAME>
 
 ---
 
-**Last Updated**: 2026-02-09
+**Last Updated**: 2026-02-17

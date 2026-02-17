@@ -8,7 +8,6 @@ export default defineConfig({
   }),
   env: {
     schema: {
-      BUCKET_NAME: envField.string({ context: 'server', access: 'secret' }),
       BUCKET_ENDPOINT: envField.string({ context: 'server', access: 'secret' }),
       BUCKET_REGION: envField.string({ context: 'server', access: 'secret' }),
       BUCKET_ACCESS_KEY_ID: envField.string({

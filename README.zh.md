@@ -48,7 +48,6 @@
 
    在部署之前，请确保已在 Cloudflare 控制面板或通过 wrangler 设置了所需的密钥环境变量：
    ```bash
-   deno run npm:wrangler secret put BUCKET_NAME
    deno run npm:wrangler secret put BUCKET_ENDPOINT
    deno run npm:wrangler secret put BUCKET_REGION
    deno run npm:wrangler secret put BUCKET_ACCESS_KEY_ID
@@ -66,7 +65,6 @@
 
 | 名称 | 描述 | 必填 | 默认值 |
 |------|-------------|----------|---------|
-| `BUCKET_NAME` | 存储桶名称。 | 是 | - |
 | `BUCKET_ENDPOINT` | 存储桶端点。 | 是 | - |
 | `BUCKET_REGION` | 存储桶区域。 | 是 | - |
 | `BUCKET_ACCESS_KEY_ID` | 存储桶访问密钥 ID。 | 是 | - |
