@@ -87,8 +87,6 @@ interface S3Object {
   Key: string;
   Size: number;
   LastModified: Date;
-  ETag: string;
-  StorageClass: string;
 }
 
 const objectListToFS = (
