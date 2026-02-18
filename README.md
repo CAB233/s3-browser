@@ -41,8 +41,9 @@
 ### Deploy to Cloudflare
 
 1. Configure Wrangler configuration file
-
-   Copy `wrangler.toml.example` to `wrangler.toml` and configure your Cloudflare settings.
+   ```bash
+   cp wrangler.toml.example wrangler.toml
+   ```
 
 2. Configure Secrets
 

@@ -40,9 +40,10 @@
 
 ### 部署到 Cloudflare
 
-1. 配置 Wrangler 配置文件
-
-   将 `wrangler.toml.example` 复制为 `wrangler.toml` 并配置你的 Cloudflare 设置。
+1. 配置 Wrangler
+   ```bash
+   cp wrangler.toml.example wrangler.toml
+   ```
 
 2. 配置密钥
 
