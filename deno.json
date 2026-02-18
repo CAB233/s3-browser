@@ -1,10 +1,11 @@
 {
   "nodeModulesDir": "auto",
   "tasks": {
+    "check": "deno run -A npm:astro check",
     "dev": "deno run -A --env-file=.dev.vars npm:astro dev",
-    "dev:cloudflare": "deno run build && deno run -A --env-file=.dev.vars npm:wrangler pages dev ./dist",
-    "build": "deno run -A --env-file=.dev.vars npm:astro check && deno run -A --env-file=.dev.vars npm:astro build",
-    "deploy": "deno run --allow-env --allow-run --env-file=.dev.vars npm:wrangler deploy"
+    "dev:cloudflare": "deno task build && deno run --allow-env --allow-run --env-file=.dev.vars npm:wrangler pages dev ./dist",
+    "build": "deno run -A --env-file=.dev.vars npm:astro build",
+    "deploy": "deno run --allow-env --allow-run npm:wrangler deploy"
   },
   "imports": {
     "@astrojs/check": "npm:@astrojs/check@^0.9.6",
