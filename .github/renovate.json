@@ -3,12 +3,10 @@
   "extends": [
     "config:recommended",
     ":dependencyDashboard",
-    ":semanticCommitTypeAll(chore)"
+    ":semanticCommitTypeAll(chore)",
+    "github>Omochice/renovate-config:deno"
   ],
   "labels": [
     "dependencies"
-  ],
-  "ignoreDeps": [
-    "wrangler"
   ]
 }
