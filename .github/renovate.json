@@ -8,5 +8,19 @@
   ],
   "labels": [
     "dependencies"
+  ],
+  "ignoreDeps": [
+    "wrangler"
+  ],
+  "packageRules": [
+    {
+      "matchFileNames": [
+        "deno.json"
+      ],
+      "matchManagers": [
+        "jsonata"
+      ],
+      "overrideDatasource": "npm"
+    }
   ]
 }
