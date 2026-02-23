@@ -34,7 +34,7 @@ jobs:
         run: deno install --frozen=false
 
       - name: Commit and push changes
-        uses: stefanzweifel/git-auto-commit-action@v6
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           branch: ${{ github.head_ref }}
           commit_message: 'chore: update deno.lock'
