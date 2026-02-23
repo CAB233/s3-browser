@@ -1,0 +1,44 @@
+name: Update Deno Lock File
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'deno.json'
+
+jobs:
+  update-lockfile:
+    if: github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.head_ref, 'renovate/')
+    runs-on: ubuntu-24.04
+    steps:
+      # Workaround to trigger github actions on pull request that we push commits to.
+      # https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs
+      - uses: actions/create-github-app-token@v2
+        id: generate-token
+        with:
+          app-id: ${{ secrets.CREATE_GH_TOKEN_APP_ID }}
+          private-key: ${{ secrets.CREATE_GH_TOKEN_APP_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v2.x
+
+      - name: Update Deno lock file
+        run: deno install --frozen=false
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          branch: ${{ github.head_ref }}
+          commit_message: 'chore: update deno.lock'
+          file_pattern: 'deno.lock'
+          commit_user_name: YanamiChan[bot]
+          commit_user_email: 182213109+YanamiChan[bot]@users.noreply.github.com
+          commit_author: YanamiChan[bot] <182213109+YanamiChan[bot]@users.noreply.github.com>
