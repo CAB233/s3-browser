@@ -1,7 +1,7 @@
 {
   "version": "5",
   "specifiers": {
-    "npm:@astrojs/check@0.9.6": "0.9.6_typescript@5.9.3",
+    "npm:@astrojs/check@0.9.7": "0.9.7_typescript@5.9.3",
     "npm:@astrojs/cloudflare@12.6.12": "12.6.12_astro@5.18.0__typescript@5.9.3__vite@6.4.1___picomatch@4.0.3__zod@3.25.76_@cloudflare+workers-types@4.20260302.0_typescript@5.9.3",
     "npm:astro@5.18.0": "5.18.0_typescript@5.9.3_vite@6.4.1__picomatch@4.0.3_zod@3.25.76",
     "npm:s3mini@0.9.1": "0.9.1",
@@ -9,8 +9,8 @@
     "npm:wrangler@4.66.0": "4.66.0_unenv@2.0.0-rc.24_workerd@1.20260217.0"
   },
   "npm": {
-    "@astrojs/check@0.9.6_typescript@5.9.3": {
-      "integrity": "sha512-jlaEu5SxvSgmfGIFfNgcn5/f+29H61NJzEMfAZ82Xopr4XBchXB1GVlcJsE+elUlsYSbXlptZLX+JMG3b/wZEA==",
+    "@astrojs/check@0.9.7_typescript@5.9.3": {
+      "integrity": "sha512-dA7U5/OFg8/xaMUb2vUOOJuuJXnMpHy6F0BM8ZhL7WT5OkTBwJ0GoW38n4fC4CXt+lT9mLWL0y8Pa74tFByBpQ==",
       "dependencies": [
         "@astrojs/language-server",
         "chokidar@4.0.3",
@@ -38,8 +38,8 @@
     "@astrojs/internal-helpers@0.7.5": {
       "integrity": "sha512-vreGnYSSKhAjFJCWAwe/CNhONvoc5lokxtRoZims+0wa3KbHBdPHSSthJsKxPd8d/aic6lWKpRTYGY/hsgK6EA=="
     },
-    "@astrojs/language-server@2.16.3_typescript@5.9.3_@volar+language-service@2.4.28": {
-      "integrity": "sha512-yO5K7RYCMXUfeDlnU6UnmtnoXzpuQc0yhlaCNZ67k1C/MiwwwvMZz+LGa+H35c49w5QBfvtr4w4Zcf5PcH8uYA==",
+    "@astrojs/language-server@2.16.4_typescript@5.9.3": {
+      "integrity": "sha512-42oqz9uX+hU1/rFniJvtYW9FbfZJ6syM2fYZFi7Ub71/kOvF1GSeMS8sA3Ogs3iOeNUWefk/ImwBiiHeNmJfSA==",
       "dependencies": [
         "@astrojs/compiler",
         "@astrojs/yaml2ts",
@@ -109,10 +109,10 @@
     "@astrojs/underscore-redirects@1.0.0": {
       "integrity": "sha512-qZxHwVnmb5FXuvRsaIGaqWgnftjCuMY+GSbaVZdBmE4j8AfgPqKPxYp8SUERyJcjpKCEmO4wD6ybuGH8A2kVRQ=="
     },
-    "@astrojs/yaml2ts@0.2.2": {
-      "integrity": "sha512-GOfvSr5Nqy2z5XiwqTouBBpy5FyI6DEe+/g/Mk5am9SjILN1S5fOEvYK0GuWHg98yS/dobP4m8qyqw/URW35fQ==",
+    "@astrojs/yaml2ts@0.2.3": {
+      "integrity": "sha512-PJzRmgQzUxI2uwpdX2lXSHtP4G8ocp24/t+bZyf5Fy0SZLSF9f9KXZoMlFM/XCGue+B0nH/2IZ7FpBYQATBsCg==",
       "dependencies": [
-        "yaml"
+        "yaml@2.8.2"
       ]
     },
     "@babel/helper-string-parser@7.27.1": {
@@ -3209,8 +3209,8 @@
         "@volar/language-service"
       ]
     },
-    "vscode-css-languageservice@6.3.9": {
-      "integrity": "sha512-1tLWfp+TDM5ZuVWht3jmaY5y7O6aZmpeXLoHl5bv1QtRsRKt4xYGRMmdJa5Pqx/FTkgRbsna9R+Gn2xE+evVuA==",
+    "vscode-css-languageservice@6.3.10": {
+      "integrity": "sha512-eq5N9Er3fC4vA9zd9EFhyBG90wtCCuXgRSpAndaOgXMh1Wgep5lBgRIeDgjZBW9pa+332yC9+49cZMW8jcL3MA==",
       "dependencies": [
         "@vscode/l10n",
         "vscode-languageserver-textdocument",
@@ -3218,8 +3218,8 @@
         "vscode-uri"
       ]
     },
-    "vscode-html-languageservice@5.6.1": {
-      "integrity": "sha512-5Mrqy5CLfFZUgkyhNZLA1Ye5g12Cb/v6VM7SxUzZUaRKWMDz4md+y26PrfRTSU0/eQAl3XpO9m2og+GGtDMuaA==",
+    "vscode-html-languageservice@5.6.2": {
+      "integrity": "sha512-ulCrSnFnfQ16YzvwnYUgEbUEl/ZG7u2eV27YhvLObSHKkb8fw1Z9cgsnUwjTEeDIdJDoTDTDpxuhQwoenoLNMg==",
       "dependencies": [
         "@vscode/l10n",
         "vscode-languageserver-textdocument",
@@ -3365,7 +3365,7 @@
     "y18n@5.0.8": {
       "integrity": "sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA=="
     },
-    "yaml-language-server@1.19.2_ajv@8.18.0": {
+    "yaml-language-server@1.19.2": {
       "integrity": "sha512-9F3myNmJzUN/679jycdMxqtydPSDRAarSj3wPiF7pchEPnO9Dg07Oc+gIYLqXR4L+g+FSEVXXv2+mr54StLFOg==",
       "dependencies": [
         "@vscode/l10n",
@@ -3379,12 +3379,16 @@
         "vscode-languageserver-textdocument",
         "vscode-languageserver-types",
         "vscode-uri",
-        "yaml"
+        "yaml@2.7.1"
       ],
       "bin": true
     },
     "yaml@2.7.1": {
       "integrity": "sha512-10ULxpnOCQXxJvBgxsn9ptjq6uviG/htZKk9veJGhlqn3w/DxQ631zFF+nlQXLwmImeS5amR2dl2U8sg6U9jsQ==",
+      "bin": true
+    },
+    "yaml@2.8.2": {
+      "integrity": "sha512-mplynKqc1C2hTVYxd0PU2xQAc22TI1vShAYGksCCfxbn/dFwnHTNi1bvYsBTkhdUNtGIf5xNOg938rrSSYvS9A==",
       "bin": true
     },
     "yargs-parser@21.1.1": {
@@ -3456,7 +3460,7 @@
   },
   "workspace": {
     "dependencies": [
-      "npm:@astrojs/check@0.9.6",
+      "npm:@astrojs/check@0.9.7",
       "npm:@astrojs/cloudflare@12.6.12",
       "npm:astro@5.18.0",
       "npm:s3mini@0.9.1",
