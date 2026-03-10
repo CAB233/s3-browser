@@ -8,7 +8,7 @@
     "deploy": "deno run --allow-env --allow-run npm:wrangler deploy"
   },
   "imports": {
-    "@astrojs/check": "npm:@astrojs/check@0.9.6",
+    "@astrojs/check": "npm:@astrojs/check@0.9.7",
     "@astrojs/cloudflare": "npm:@astrojs/cloudflare@12.6.12",
     "astro": "npm:astro@5.18.0",
     "s3mini": "npm:s3mini@0.9.1",
