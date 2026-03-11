@@ -1,12 +1,6 @@
 "$schema" = "./node_modules/wrangler/config-schema.json"
 name = "s3-browser"
-main = "./dist/_worker.js/index.js"
-compatibility_date = "2026-02-04"
-minify = true
 workers_dev = false
 
 [placement]
 mode = "smart"
-
-[assets]
-directory = "./dist"
