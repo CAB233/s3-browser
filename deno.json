@@ -1,19 +1,18 @@
 {
   "nodeModulesDir": "auto",
   "tasks": {
-    "check": "deno run -A npm:astro check",
-    "dev": "deno run -A --env-file=.dev.vars npm:astro dev",
-    "dev:cloudflare": "deno task build && deno run --allow-env --allow-run --env-file=.dev.vars npm:wrangler pages dev ./dist",
     "build": "deno run -A --env-file=.dev.vars npm:astro build",
-    "deploy": "deno run --allow-env --allow-run npm:wrangler deploy"
+    "check": "deno run -A npm:astro check",
+    "preview": "deno task build && deno run -A --env-file=.dev.vars npm:astro preview",
+    "deploy": "deno task build && deno run --allow-env --allow-run npm:wrangler deploy"
   },
   "imports": {
-    "@astrojs/check": "npm:@astrojs/check@0.9.6",
-    "@astrojs/cloudflare": "npm:@astrojs/cloudflare@13.0.1",
-    "astro": "npm:astro@6.0.0",
+    "@astrojs/check": "npm:@astrojs/check@0.9.7",
+    "@astrojs/cloudflare": "npm:@astrojs/cloudflare@13.0.2",
+    "astro": "npm:astro@6.0.2",
     "s3mini": "npm:s3mini@0.9.1",
     "typescript": "npm:typescript@5.9.3",
-    "wrangler": "npm:wrangler@4.66.0"
+    "wrangler": "npm:wrangler@4.72.0"
   },
   "fmt": {
     "useTabs": false,
