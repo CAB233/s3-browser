@@ -2,9 +2,8 @@
   "version": "5",
   "specifiers": {
     "npm:@astrojs/check@0.9.7": "0.9.7_typescript@5.9.3",
-    "npm:@astrojs/cloudflare@13.0.2": "13.0.2_astro@6.0.2__typescript@5.9.3_wrangler@4.72.0_typescript@5.9.3",
-    "npm:astro@*": "6.0.2_typescript@5.9.3",
-    "npm:astro@6.0.2": "6.0.2_typescript@5.9.3",
+    "npm:@astrojs/cloudflare@13.1.0": "13.1.0_astro@6.0.3__typescript@5.9.3_wrangler@4.72.0_typescript@5.9.3",
+    "npm:astro@6.0.3": "6.0.3_typescript@5.9.3",
     "npm:s3mini@0.9.1": "0.9.1",
     "npm:typescript@5.9.3": "5.9.3",
     "npm:wrangler@*": "4.72.0",
@@ -22,8 +21,8 @@
       ],
       "bin": true
     },
-    "@astrojs/cloudflare@13.0.2_astro@6.0.2__typescript@5.9.3_wrangler@4.72.0_typescript@5.9.3": {
-      "integrity": "sha512-QXt3NefKuLCRPHW+/9TSUufv4trAehxJCCpRsUPNSsDPFHQQrlL6zNPTG6nqEeuFKB5fAegraC1i2xjZ4atoXw==",
+    "@astrojs/cloudflare@13.1.0_astro@6.0.3__typescript@5.9.3_wrangler@4.72.0_typescript@5.9.3": {
+      "integrity": "sha512-gnHD3XhBKRoQJc5OAp1g2blGKoxLW8X4VEmN30K/M3cNkyACAG1j8UdLHNb4wAjTwFTIJ7O2KmUNeg8GUJKjMA==",
       "dependencies": [
         "@astrojs/internal-helpers",
         "@astrojs/underscore-redirects",
@@ -912,8 +911,8 @@
     "array-iterate@2.0.1": {
       "integrity": "sha512-I1jXZMjAgCMmxT4qxXfPXa6SthSoE8h6gkSI9BGGNv8mP8G/v0blc+qFnZu6K42vTOiuME596QaLO0TP3Lk0xg=="
     },
-    "astro@6.0.2_typescript@5.9.3": {
-      "integrity": "sha512-aYCU9QcaV3QlOxO+JU2lR4xazVuPaH7oFhc990H/fhbWLMm1MWlRnjfnti1gYMm9N9l7gqPb3t7JsQBlUEQXIg==",
+    "astro@6.0.3_typescript@5.9.3": {
+      "integrity": "sha512-M0s9KMmGeaLQPB0shVNqr3ZypEXBDFE/VsexBoA0nWVFwr84BnGxffXH8LG0KPxnVTRwpC3/zPjllVAlRLYJuw==",
       "dependencies": [
         "@astrojs/compiler@3.0.0",
         "@astrojs/internal-helpers",
@@ -1113,8 +1112,8 @@
     "detect-libc@2.1.2": {
       "integrity": "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ=="
     },
-    "devalue@5.6.3": {
-      "integrity": "sha512-nc7XjUU/2Lb+SvEFVGcWLiKkzfw8+qHI7zn8WYXKkLMgfGSHbgCEaR6bJpev8Cm6Rmrb19Gfd/tZvGqx9is3wg=="
+    "devalue@5.6.4": {
+      "integrity": "sha512-Gp6rDldRsFh/7XuouDbxMH3Mx8GMCcgzIb1pDTvNyn8pZGQ22u+Wa+lGV9dQCltFQ7uVw0MhRyb8XDskNFOReA=="
     },
     "devlop@1.1.0": {
       "integrity": "sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==",
@@ -2759,8 +2758,8 @@
   "workspace": {
     "dependencies": [
       "npm:@astrojs/check@0.9.7",
-      "npm:@astrojs/cloudflare@13.0.2",
-      "npm:astro@6.0.2",
+      "npm:@astrojs/cloudflare@13.1.0",
+      "npm:astro@6.0.3",
       "npm:s3mini@0.9.1",
       "npm:typescript@5.9.3",
       "npm:wrangler@4.72.0"
