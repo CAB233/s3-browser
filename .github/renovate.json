@@ -9,7 +9,9 @@
   "labels": [
     "dependencies"
   ],
-  "ignoreDeps": [
-    "wrangler"
-  ]
+  "postUpgradeTasks": {
+    "commands": ["deno install"],
+    "fileFilters": ["deno.lock"],
+    "executionMode": "branch"
+  }
 }
