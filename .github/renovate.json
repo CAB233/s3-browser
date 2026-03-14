@@ -6,10 +6,13 @@
     ":semanticCommitTypeAll(chore)",
     "github>Omochice/renovate-config:deno"
   ],
-  "labels": [
-    "dependencies"
-  ],
-  "ignoreDeps": [
-    "wrangler"
-  ]
+  "labels": ["dependencies"],
+  "postUpgradeTasks": {
+    "commands": ["npx -y deno install"],
+    "fileFilters": ["deno.lock"],
+    "executionMode": "branch",
+    "installTools": {
+      "node": {}
+    }
+  }
 }
