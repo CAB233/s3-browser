@@ -8,8 +8,8 @@
   },
   "imports": {
     "@astrojs/check": "npm:@astrojs/check@0.9.7",
-    "@astrojs/cloudflare": "npm:@astrojs/cloudflare@13.1.0",
-    "astro": "npm:astro@6.0.3",
+    "@astrojs/cloudflare": "npm:@astrojs/cloudflare@13.1.1",
+    "astro": "npm:astro@6.0.4",
     "s3mini": "npm:s3mini@0.9.1",
     "typescript": "npm:typescript@5.9.3",
     "wrangler": "npm:wrangler@4.73.0"
