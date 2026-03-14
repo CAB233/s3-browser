@@ -1,0 +1,16 @@
+name: PR Build
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    if: startsWith(github.head_ref, 'renovate/')
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v2.x
+      - run: deno install
+      - run: deno task build
