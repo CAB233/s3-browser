@@ -1,0 +1,10 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-global-schema.json",
+  "username": "YanamiChan[bot]",
+  "gitAuthor": "YanamiChan[bot] <182213109+YanamiChan[bot]@users.noreply.github.com>",
+  "autodiscover": true,
+  "allowedCommands": [
+    "^npm install -g deno$",
+    "^deno install$"
+  ]
+}

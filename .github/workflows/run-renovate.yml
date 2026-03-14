@@ -1,0 +1,31 @@
+name: Run Renovate
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "45 11 * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - "deno.json"
+      - "deno.lock"
+
+jobs:
+  run:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/create-github-app-token@v3
+        id: generate-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Renovate
+        uses: renovatebot/github-action@v46.1.4
+        with:
+          configurationFile: ".github/renovate-bot.json"
+          token: "${{ steps.generate-token.outputs.token }}"
