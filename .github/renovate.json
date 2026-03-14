@@ -9,7 +9,14 @@
   "labels": [
     "dependencies"
   ],
-  "ignoreDeps": [
-    "wrangler"
-  ]
+  "postUpgradeTasks": {
+    "commands": [
+      "npm install -g deno",
+      "deno install"
+    ],
+    "fileFilters": [
+      "deno.lock"
+    ],
+    "executionMode": "branch"
+  }
 }
