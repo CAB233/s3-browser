@@ -2,12 +2,11 @@
   "version": "5",
   "specifiers": {
     "npm:@astrojs/check@0.9.7": "0.9.7_typescript@5.9.3",
-    "npm:@astrojs/cloudflare@13.1.1": "13.1.1_astro@6.0.4__typescript@5.9.3_wrangler@4.73.0_typescript@5.9.3",
+    "npm:@astrojs/cloudflare@13.1.1": "13.1.1_astro@6.0.4__typescript@5.9.3_wrangler@4.74.0",
     "npm:astro@6.0.4": "6.0.4_typescript@5.9.3",
     "npm:s3mini@0.9.1": "0.9.1",
     "npm:typescript@5.9.3": "5.9.3",
-    "npm:wrangler@*": "4.73.0",
-    "npm:wrangler@4.73.0": "4.73.0"
+    "npm:wrangler@4.74.0": "4.74.0"
   },
   "npm": {
     "@astrojs/check@0.9.7_typescript@5.9.3": {
@@ -21,7 +20,7 @@
       ],
       "bin": true
     },
-    "@astrojs/cloudflare@13.1.1_astro@6.0.4__typescript@5.9.3_wrangler@4.73.0_typescript@5.9.3": {
+    "@astrojs/cloudflare@13.1.1_astro@6.0.4__typescript@5.9.3_wrangler@4.74.0": {
       "integrity": "sha512-Bx2Sr/cLi9VUA0iArMYc/O6wsKZdC2W6prE8dzMGbJqaF5oEBVBG6UclKe1T95SISrDIysuLlFNvVWL6htqnuA==",
       "dependencies": [
         "@astrojs/internal-helpers",
@@ -31,7 +30,7 @@
         "piccolore",
         "tinyglobby",
         "vite",
-        "wrangler"
+        "wrangler@4.74.0"
       ]
     },
     "@astrojs/compiler@2.13.1": {
@@ -178,10 +177,10 @@
       "integrity": "sha512-h2idr5fZ5GojyWZOZ506NHaDAVq3zpvcKgk8ZzDLlnHHvOwXZlFDPRf9Kkffv0fe+J6GPn7gVjJxgT0YRXAbew==",
       "dependencies": [
         "@cloudflare/unenv-preset",
-        "miniflare",
+        "miniflare@4.20260312.0",
         "unenv",
         "vite",
-        "wrangler",
+        "wrangler@4.73.0",
         "ws"
       ]
     },
@@ -1860,6 +1859,18 @@
       ],
       "bin": true
     },
+    "miniflare@4.20260312.1": {
+      "integrity": "sha512-YSWxec9ssisqkQgaCgcIQxZlB41E9hMiq1nxUgxXHRrE9NsfyC6ptSt8yfgBobsKIseAVKLTB/iEDpMumBv8oA==",
+      "dependencies": [
+        "@cspotcode/source-map-support",
+        "sharp",
+        "undici",
+        "workerd",
+        "ws",
+        "youch"
+      ],
+      "bin": true
+    },
     "mrmime@2.0.1": {
       "integrity": "sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ=="
     },
@@ -2657,7 +2668,24 @@
         "@cloudflare/unenv-preset",
         "blake3-wasm",
         "esbuild",
-        "miniflare",
+        "miniflare@4.20260312.0",
+        "path-to-regexp",
+        "unenv",
+        "workerd"
+      ],
+      "optionalDependencies": [
+        "fsevents"
+      ],
+      "bin": true
+    },
+    "wrangler@4.74.0": {
+      "integrity": "sha512-3qprbhgdUyqYGHZ+Y1k0gsyHLMOlLrKL/HU0LDqLlCkbsKPprUA0/ThE4IZsxD84xAAXY6pv5JUuxS2+OnMa3A==",
+      "dependencies": [
+        "@cloudflare/kv-asset-handler",
+        "@cloudflare/unenv-preset",
+        "blake3-wasm",
+        "esbuild",
+        "miniflare@4.20260312.1",
         "path-to-regexp",
         "unenv",
         "workerd"
@@ -2762,7 +2790,7 @@
       "npm:astro@6.0.4",
       "npm:s3mini@0.9.1",
       "npm:typescript@5.9.3",
-      "npm:wrangler@4.73.0"
+      "npm:wrangler@4.74.0"
     ]
   }
 }
