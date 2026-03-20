@@ -3,7 +3,7 @@ name: Run Renovate
 on:
   workflow_dispatch:
   schedule:
-    - cron: "45 11 * * *"
+    - cron: "45 11 1 * *"
   push:
     branches:
       - main
