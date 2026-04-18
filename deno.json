@@ -11,7 +11,7 @@
     "@astrojs/cloudflare": "npm:@astrojs/cloudflare@13.1.10",
     "astro": "npm:astro@6.1.7",
     "s3mini": "npm:s3mini@0.9.4",
-    "typescript": "npm:typescript@^5.9.3",
+    "typescript": "npm:typescript@^6.0.0",
     "wrangler": "npm:wrangler@4.83.0"
   },
   "fmt": {
