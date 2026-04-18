@@ -4,6 +4,11 @@ import cloudflare from '@astrojs/cloudflare';
 export default defineConfig({
   output: 'server',
   adapter: cloudflare(),
+  vite: {
+    build: {
+      minify: true,
+    },
+  },
   env: {
     schema: {
       BUCKET_ENDPOINT: envField.string({ context: 'server', access: 'secret' }),

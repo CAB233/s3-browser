@@ -1,6 +1,7 @@
-"$schema" = "./node_modules/wrangler/config-schema.json"
+#:$schema ./node_modules/wrangler/config-schema.json
 name = "s3-browser"
 workers_dev = false
+upload_source_maps = true
 
 [placement]
 mode = "smart"
