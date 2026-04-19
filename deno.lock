@@ -2,9 +2,8 @@
   "version": "5",
   "specifiers": {
     "npm:@astrojs/check@0.9.8": "0.9.8_typescript@5.9.3",
-    "npm:@astrojs/cloudflare@13.1.10": "13.1.10_astro@6.1.7__typescript@5.9.3_wrangler@4.83.0_typescript@5.9.3",
-    "npm:astro@*": "6.1.7_typescript@5.9.3",
-    "npm:astro@6.1.7": "6.1.7_typescript@5.9.3",
+    "npm:@astrojs/cloudflare@13.1.10": "13.1.10_astro@6.1.8__typescript@5.9.3_wrangler@4.83.0_typescript@5.9.3",
+    "npm:astro@6.1.8": "6.1.8_typescript@5.9.3",
     "npm:s3mini@0.9.4": "0.9.4",
     "npm:typescript@^5.9.3": "5.9.3",
     "npm:wrangler@*": "4.83.0",
@@ -22,7 +21,7 @@
       ],
       "bin": true
     },
-    "@astrojs/cloudflare@13.1.10_astro@6.1.7__typescript@5.9.3_wrangler@4.83.0_typescript@5.9.3": {
+    "@astrojs/cloudflare@13.1.10_astro@6.1.8__typescript@5.9.3_wrangler@4.83.0_typescript@5.9.3": {
       "integrity": "sha512-Ogl8p4MifPMHbpHKJL78eqEL+I3wbHrYmo83P/FkKZQ9VzzKi2A1RjnbaiiPAwrA8xQOqIUo4zlN7+Mse0aJAQ==",
       "dependencies": [
         "@astrojs/internal-helpers",
@@ -103,14 +102,13 @@
         "prismjs"
       ]
     },
-    "@astrojs/telemetry@3.3.0": {
-      "integrity": "sha512-UFBgfeldP06qu6khs/yY+q1cDAaArM2/7AEIqQ9Cuvf7B1hNLq0xDrZkct+QoIGyjq56y8IaE2I3CTvG99mlhQ==",
+    "@astrojs/telemetry@3.3.1": {
+      "integrity": "sha512-7fcIxXS9J4ls5tr8b3ww9rbAIz2+HrhNJYZdkAhhB4za/I5IZ/60g+Bs8q7zwG0tOIZfNB4JWhVJ1Qkl/OrNCw==",
       "dependencies": [
         "ci-info",
-        "debug",
         "dlv",
         "dset",
-        "is-docker",
+        "is-docker@4.0.0",
         "is-wsl",
         "which-pm-runs"
       ]
@@ -916,8 +914,8 @@
     "array-iterate@2.0.1": {
       "integrity": "sha512-I1jXZMjAgCMmxT4qxXfPXa6SthSoE8h6gkSI9BGGNv8mP8G/v0blc+qFnZu6K42vTOiuME596QaLO0TP3Lk0xg=="
     },
-    "astro@6.1.7_typescript@5.9.3": {
-      "integrity": "sha512-pvZysIUV2C2nRv8N7cXAkCLcfDQz/axAxF09SqiTz1B+xnvbhy6KzL2I6J15ZBXk8k0TfMD75dJ151QyQmAqZA==",
+    "astro@6.1.8_typescript@5.9.3": {
+      "integrity": "sha512-6fT9M12U3fpi13DiPavNKDIoBflASTSxmKTEe+zXhWtlebQuOqfOnIrMWyRmlXp+mgDsojmw+fVFG9LUTzKSog==",
       "dependencies": [
         "@astrojs/compiler@3.0.1",
         "@astrojs/internal-helpers",
@@ -1422,13 +1420,17 @@
       "integrity": "sha512-eljcgEDlEns/7AXFosB5K/2nCM4P7FQPkGc/DWLy5rmFEWvZayGrik1d9/QIY5nJ4f9YsVvBkA6kJpHn9rISdQ==",
       "bin": true
     },
+    "is-docker@4.0.0": {
+      "integrity": "sha512-LHE+wROyG/Y/0ZnbktRCoTix2c1RhgWaZraMZ8o1Q7zCh0VSrICJQO5oqIIISrcSBtrXv0o233w1IYwsWCjTzA==",
+      "bin": true
+    },
     "is-fullwidth-code-point@3.0.0": {
       "integrity": "sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg=="
     },
     "is-inside-container@1.0.0": {
       "integrity": "sha512-KIYLCCJghfHZxqjYBE7rEy0OBuTd5xCHS7tHVgvCLkx7StIoaxwNW3hCALgEUjFfeRk+MG/Qxmp/vtETEF3tRA==",
       "dependencies": [
-        "is-docker"
+        "is-docker@3.0.0"
       ],
       "bin": true
     },
@@ -2774,7 +2776,7 @@
     "dependencies": [
       "npm:@astrojs/check@0.9.8",
       "npm:@astrojs/cloudflare@13.1.10",
-      "npm:astro@6.1.7",
+      "npm:astro@6.1.8",
       "npm:s3mini@0.9.4",
       "npm:typescript@^5.9.3",
       "npm:wrangler@4.83.0"
