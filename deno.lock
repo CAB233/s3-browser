@@ -6,7 +6,7 @@
     "npm:astro@*": "6.1.7_typescript@5.9.3",
     "npm:astro@6.1.7": "6.1.7_typescript@5.9.3",
     "npm:s3mini@0.9.4": "0.9.4",
-    "npm:typescript@^5.9.3": "5.9.3",
+    "npm:typescript@6": "6.0.3",
     "npm:wrangler@*": "4.83.0",
     "npm:wrangler@4.83.0": "4.83.0"
   },
@@ -17,7 +17,7 @@
         "@astrojs/language-server",
         "chokidar@4.0.3",
         "kleur",
-        "typescript",
+        "typescript@5.9.3",
         "yargs"
       ],
       "bin": true
@@ -815,7 +815,7 @@
         "@volar/language-service",
         "@volar/typescript",
         "typesafe-path",
-        "typescript",
+        "typescript@5.9.3",
         "vscode-languageserver-textdocument",
         "vscode-uri"
       ]
@@ -2329,10 +2329,10 @@
     "tsconfck@3.1.6_typescript@5.9.3": {
       "integrity": "sha512-ks6Vjr/jEw0P1gmOVwutM3B7fWxoWBL2KRDb1JfqGVawBmO5UsvmWOQFGHBPl5yxYz4eERr19E6L7NMv+Fej4w==",
       "dependencies": [
-        "typescript"
+        "typescript@5.9.3"
       ],
       "optionalPeers": [
-        "typescript"
+        "typescript@5.9.3"
       ],
       "bin": true
     },
@@ -2350,6 +2350,10 @@
     },
     "typescript@5.9.3": {
       "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
+      "bin": true
+    },
+    "typescript@6.0.3": {
+      "integrity": "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==",
       "bin": true
     },
     "ufo@1.6.3": {
@@ -2776,7 +2780,7 @@
       "npm:@astrojs/cloudflare@13.1.10",
       "npm:astro@6.1.7",
       "npm:s3mini@0.9.4",
-      "npm:typescript@^5.9.3",
+      "npm:typescript@6",
       "npm:wrangler@4.83.0"
     ]
   }
