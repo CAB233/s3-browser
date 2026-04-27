@@ -18,17 +18,24 @@ const sortedEntries = sortEntries(
   viewParams.order,
 );
 const sortedFsListing = { ...fsListing, entries: sortedEntries };
+
+// Cache successful listings at the edge for 30 seconds,
+// allow stale responses for an additional 60 seconds while revalidating
+if (totalCount > 0) {
+  Astro.response.headers.set(
+    'Cache-Control',
+    'public, s-maxage=30, stale-while-revalidate=60',
+  );
+}
 ---
 
-<Layout title={title}>
-  {
-    (!!totalCount && (
-      <IndexPage
-        breadCrums={breadCrums}
-        fsListing={sortedFsListing}
-        requestPath={requestPath}
-        viewParams={viewParams}
-      />
-    )) || <FourOhFour />
-  }
+<Layout {title}>
+  {(!!totalCount && (
+    <IndexPage
+      {breadCrums}
+      fsListing={sortedFsListing}
+      {requestPath}
+      {viewParams}
+    />
+  )) || <FourOhFour />}
 </Layout>

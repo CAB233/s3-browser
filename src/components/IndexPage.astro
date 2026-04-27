@@ -7,7 +7,11 @@ import List from '../icons/list.svg?raw';
 import Grid from '../icons/grid.svg?raw';
 import type { BreadcrumbEntry } from '../functions/breadcrumb';
 import type { FSListing } from '../functions/s3';
-import { buildSortUrl, getSortIndicator, type ViewParams } from '../functions/sort';
+import {
+  buildSortUrl,
+  getSortIndicator,
+  type ViewParams,
+} from '../functions/sort';
 
 interface Props {
   breadCrums: BreadcrumbEntry[];
@@ -20,8 +24,20 @@ const { breadCrums, fsListing, requestPath, viewParams } = Astro.props;
 const { layout, sort, order } = viewParams;
 
 // Build URLs for layout toggle
-const listUrl = buildSortUrl(requestPath, viewParams, undefined, undefined, 'list');
-const gridUrl = buildSortUrl(requestPath, viewParams, undefined, undefined, 'grid');
+const listUrl = buildSortUrl(
+  requestPath,
+  viewParams,
+  undefined,
+  undefined,
+  'list',
+);
+const gridUrl = buildSortUrl(
+  requestPath,
+  viewParams,
+  undefined,
+  undefined,
+  'grid',
+);
 
 // Build URLs for sort headers
 const nameSortUrl = buildSortUrl(requestPath, viewParams, 'name');
@@ -35,21 +51,19 @@ const timeIndicator = getSortIndicator('time', sort, order);
 ---
 
 <header>
-  <div class='wrapper'>
-    <div class='breadcrumbs'>Folder Path</div>
+  <div class="wrapper">
+    <div class="breadcrumbs">Folder Path</div>
     <h1>
-      {
-        breadCrums.map((crumb, index) => {
-          return (
-            (!!index && (
-              <>
-                <a href={crumb.path}>{crumb.name}</a>
-                <span>/</span>
-              </>
-            )) || <a href={crumb.path}>{crumb.name}</a>
-          );
-        })
-      }
+      {breadCrums.map((crumb, index) => {
+        return (
+          (!!index && (
+            <>
+              <a href={crumb.path}>{crumb.name}</a>
+              <span>/</span>
+            </>
+          )) || <a href={crumb.path}>{crumb.name}</a>
+        );
+      })}
     </h1>
   </div>
 </header>
@@ -65,28 +79,34 @@ const timeIndicator = getSortIndicator('time', sort, order);
   </style>
 )}
 
-<div class='wrapper'>
+<div class="wrapper">
   <main data-view={layout}>
-    <div class='meta'>
-      <div id='summary'>
-        <span class='meta-item'>
+    <div class="meta">
+      <div id="summary">
+        <span class="meta-item">
           <b>{fsListing.numDirectories}</b>
           {fsListing.numDirectories === 1 ? 'directory' : 'directories'}
         </span>
-        <span class='meta-item'>
+        <span class="meta-item">
           <b>{fsListing.numFiles}</b>
           {fsListing.numFiles === 1 ? 'file' : 'files'}
         </span>
-        <span class='meta-item'>
+        <span class="meta-item">
           <b>{fsListing.numTotal}</b> total
         </span>
       </div>
-      <div class='layout-toggle'>
-        <a href={listUrl} class={`layout ${layout === 'list' ? 'current' : ''}`}>
+      <div class="layout-toggle">
+        <a
+          href={listUrl}
+          class={`layout ${layout === 'list' ? 'current' : ''}`}
+        >
           <Fragment set:html={List} />
           List
         </a>
-        <a href={gridUrl} class={`layout ${layout === 'grid' ? 'current' : ''}`}>
+        <a
+          href={gridUrl}
+          class={`layout ${layout === 'grid' ? 'current' : ''}`}
+        >
           <Fragment set:html={Grid} />
           Grid
         </a>
@@ -95,110 +115,112 @@ const timeIndicator = getSortIndicator('time', sort, order);
 
     {layout === 'list' ? (
       <!-- List View -->
-      <div class='listing'>
-        <table aria-describedby='summary'>
+      <div class="listing">
+        <table aria-describedby="summary">
           <thead>
             <tr>
               <th></th>
               <th>
-                <a href={nameSortUrl} class='sort-header'><Fragment set:html={nameIndicator} />Name</a>
-                <div class='filter-container'>
+                <a href={nameSortUrl} class="sort-header"><Fragment
+                    set:html={nameIndicator}
+                  />Name</a>
+                <div class="filter-container">
                   <Fragment set:html={Search} />
-                  <input type='search' placeholder='Search' id='filter' />
+                  <input type="search" placeholder="Search" id="filter" />
                 </div>
               </th>
               <th>
-                <a href={sizeSortUrl} class='sort-header'>Size<Fragment set:html={sizeIndicator} /></a>
+                <a href={sizeSortUrl} class="sort-header">Size<Fragment
+                    set:html={sizeIndicator}
+                  /></a>
               </th>
-              <th class='hideable'>
-                <a href={timeSortUrl} class='sort-header'>Modified<Fragment set:html={timeIndicator} /></a>
+              <th class="hideable">
+                <a href={timeSortUrl} class="sort-header">Modified<Fragment
+                    set:html={timeIndicator}
+                  /></a>
               </th>
-              <th class='hideable'></th>
+              <th class="hideable"></th>
             </tr>
           </thead>
           <tbody>
-            {
-              requestPath != '/' && (
-                <tr>
+            {requestPath != '/' && (
+              <tr>
+                <td />
+                <td>
+                  <a href="..">
+                    <Fragment set:html={Up} />
+                    <span class="go-up">Up</span>
+                  </a>
+                </td>
+                <td />
+                <td class="hideable" />
+                <td class="hideable" />
+              </tr>
+            )}
+            {fsListing.entries.map((entry) => {
+              return (
+                <tr class="file">
                   <td />
                   <td>
-                    <a href='..'>
-                      <Fragment set:html={Up} />
-                      <span class='go-up'>Up</span>
+                    <a href={entry.anchor}>
+                      <Icon {entry} />
+                      <span class="name">{entry.name}</span>
                     </a>
                   </td>
-                  <td />
-                  <td class='hideable' />
-                  <td class='hideable' />
-                </tr>
-              )
-            }
-            {
-              fsListing.entries.map((entry) => {
-                return (
-                  <tr class='file'>
-                    <td />
-                    <td>
-                      <a href={entry.anchor}>
-                        <Icon entry={entry} />
-                        <span class='name'>{entry.name}</span>
-                      </a>
-                    </td>
-                    {!!(entry as any).size || (entry as any).size === 0 ? (
-                      <td class='size' data-size={(entry as any).size}>
-                        <div class='sizebar'>
-                          <div class='sizebar-bar' />
-                          <div class='sizebar-text'>
-                            {entry.humanReadableSize}
-                          </div>
+                  {!!(entry as any).size || (entry as any).size === 0 ? (
+                    <td class="size" data-size={(entry as any).size}>
+                      <div class="sizebar">
+                        <div class="sizebar-bar" />
+                        <div class="sizebar-text">
+                          {entry.humanReadableSize}
                         </div>
-                      </td>
-                    ) : (
-                      <td class='size'>&mdash;</td>
-                    )}
-                    {(!!entry.lastModified && (
-                      <td class='timestamp hideable'>
-                        <time datetime={entry.lastModified?.toISOString()}>
-                          {entry.lastModified?.toLocaleString()}
-                        </time>
-                      </td>
-                    )) || <td class='timestamp hideable'>&mdash;</td>}
-                    <td class='hideable' />
-                  </tr>
-                );
-              })
-            }
+                      </div>
+                    </td>
+                  ) : <td class="size">&mdash;</td>}
+                  {(!!entry.lastModified && (
+                    <td class="timestamp hideable">
+                      <time datetime={entry.lastModified?.toISOString()}>
+                        {entry.lastModified?.toLocaleString()}
+                      </time>
+                    </td>
+                  )) || <td class="timestamp hideable">&mdash;</td>}
+                  <td class="hideable" />
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
     ) : (
-      <!-- Grid View -->
-      <div class='listing'>
-        <div class='grid'>
-          {
-            fsListing.entries.map((entry) => {
-              return (
-                <div class='entry'>
-                  <a href={entry.anchor}>
-                    <Icon entry={entry} />
-                    <span class='name'>{entry.name}</span>
-                    {entry.type === 'file' && (
-                      <span class='size'>{entry.humanReadableSize}</span>
-                    )}
-                  </a>
-                </div>
-              );
-            })
-          }
-        </div>
-      </div>
-    )}
+       <!-- Grid View -->
+       <div class="listing">
+         <div class="grid">
+           {fsListing.entries.map((entry) => {
+             return (
+               <div class="entry">
+                 <a href={entry.anchor}>
+                   <Icon {entry} />
+                   <span class="name">{entry.name}</span>
+                   {entry.type === 'file' && (
+                     <span class="size">{entry.humanReadableSize}</span>
+                   )}
+                 </a>
+               </div>
+             );
+           })}
+         </div>
+       </div>
+     )}
   </main>
 </div>
 
 <footer>
   Served with&nbsp;
-  <a rel='noopener noreferrer' href='https://www.cloudflare.com' aria-label="cloudflare-logo">
+  <a
+    rel="noopener noreferrer"
+    href="https://www.cloudflare.com"
+    aria-label="cloudflare-logo"
+  >
     <Fragment set:html={CF} />
   </a>
 </footer>

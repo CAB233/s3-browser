@@ -144,11 +144,11 @@ const objectListToFS = (
   return sortAndGetListing(unsortedEntries);
 };
 
-export const listAllObjects = async (): Promise<S3Object[]> => {
+export const listAllObjects = async (prefix?: string): Promise<S3Object[]> => {
   const client = getS3Client();
 
   try {
-    const objects = await client.listObjects();
+    const objects = await client.listObjects(undefined, prefix);
     return objects ?? [];
   } catch (e) {
     const err = e as Error & {
@@ -164,9 +164,7 @@ export const listAllObjects = async (): Promise<S3Object[]> => {
       );
     } else if (
       err.code &&
-      ['ENOTFOUND', 'EAI_AGAIN', 'ETIMEDOUT', 'ECONNREFUSED'].includes(
-        err.code,
-      )
+      ['ENOTFOUND', 'EAI_AGAIN', 'ETIMEDOUT', 'ECONNREFUSED'].includes(err.code)
     ) {
       console.error(`S3 network error: ${err.code}`);
     } else {
@@ -176,11 +174,14 @@ export const listAllObjects = async (): Promise<S3Object[]> => {
   }
 };
 
-export const listBucket = async (
-  path: string,
-): Promise<FSListing> => {
+export const listBucket = async (path: string): Promise<FSListing> => {
   const normalizedPathT = '/' + strip(path, '/') + '/';
   const normalizedPath = normalizedPathT === '//' ? '/' : normalizedPathT;
-  const allObjects = await listAllObjects();
+  // At root, fetch everything (prefix filtering would miss top-level dirs).
+  // Otherwise strip the leading slash to get a plain S3 prefix, e.g. "photos/2024/".
+  const s3Prefix = normalizedPath === '/'
+    ? undefined
+    : lstrip(normalizedPath, '/');
+  const allObjects = await listAllObjects(s3Prefix);
   return objectListToFS(allObjects, normalizedPath);
 };
