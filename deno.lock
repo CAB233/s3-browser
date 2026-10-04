@@ -7,6 +7,7 @@
     "npm:astro@^7.3.5": "7.3.5",
     "npm:s3mini@^1.0.2": "1.0.2",
     "npm:typescript@^6.0.3": "6.0.3",
+    "npm:wrangler@*": "4.147.0",
     "npm:wrangler@^4.147.0": "4.147.0"
   },
   "npm": {
