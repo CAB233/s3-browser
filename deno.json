@@ -4,7 +4,7 @@
     "dev": "deno run -A --env-file=.dev.vars npm:astro dev",
     "build": "deno task check && deno run -A --env-file=.dev.vars npm:astro build",
     "check": "deno run -A --env-file=.dev.vars npm:astro check",
-    "preview": "deno task build && deno run -A --env-file=.dev.vars npm:astro preview",
+    "preview": "deno task build && deno run -A --env-file=.dev.vars npm:wrangler dev",
     "deploy": "deno task build && deno run -A npm:wrangler deploy"
   },
   "imports": {
