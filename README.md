@@ -8,11 +8,11 @@
 
 ## Tech Stack
 
-- **Framework**: [Astro](https://astro.build/)
-- **Platform**: [Cloudflare Pages](https://pages.cloudflare.com/)
-- **Runtime**: [Deno](https://deno.com/)
-- **S3 Client**: [S3mini](https://github.com/good-lly/s3mini/)
-- **Type Safety**: [TypeScript](https://www.typescriptlang.org/)
+- Framework: [Astro](https://astro.build/)
+- Platform: [Cloudflare Workers](https://workers.cloudflare.com/)
+- Tooling: [Deno](https://deno.com/)
+- S3 Client: [S3mini](https://github.com/good-lly/s3mini/)
+- Type Safety: [TypeScript](https://www.typescriptlang.org/)
 
 ## Usage
 
@@ -30,15 +30,19 @@
    ```
 
 3. Configure Environment Variables
-
-   Copy `.dev.vars.example` to `.dev.vars` and fill in your S3 credentials.
+   ```
+   cp .dev.vars.example .dev.vars
+   ```
 
 4. Run the application
    ```bash
    deno task dev
    ```
 
-### Deploy to Cloudflare
+   Use `deno task check` for type checking, `deno task build` to check types and
+   build, and `deno task preview` to preview the production build locally.
+
+### Deploy to Cloudflare Workers
 
 1. Configure Wrangler configuration file
    ```bash
@@ -49,16 +53,15 @@
 
    Before deploying, ensure you have set the required secret environment variables in your Cloudflare dashboard or via wrangler:
    ```bash
-   deno run npm:wrangler secret put BUCKET_ENDPOINT
-   deno run npm:wrangler secret put BUCKET_REGION
-   deno run npm:wrangler secret put BUCKET_ACCESS_KEY_ID
-   deno run npm:wrangler secret put BUCKET_SECRET_ACCESS_KEY
-   deno run npm:wrangler secret put BUCKET_DOWNLOAD_URL
+   deno run -A npm:wrangler secret put BUCKET_ENDPOINT
+   deno run -A npm:wrangler secret put BUCKET_REGION
+   deno run -A npm:wrangler secret put BUCKET_ACCESS_KEY_ID
+   deno run -A npm:wrangler secret put BUCKET_SECRET_ACCESS_KEY
+   deno run -A npm:wrangler secret put BUCKET_DOWNLOAD_URL
    ```
 
 3. Build and Deploy
    ```bash
-   deno task build
    deno task deploy
    ```
 

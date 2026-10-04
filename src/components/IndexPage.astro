@@ -5,13 +5,13 @@ import CF from '../icons/cloudflare.svg?raw';
 import Search from '../icons/search.svg?raw';
 import List from '../icons/list.svg?raw';
 import Grid from '../icons/grid.svg?raw';
-import type { BreadcrumbEntry } from '../functions/breadcrumb';
-import type { FSListing } from '../functions/s3';
+import type { BreadcrumbEntry } from '../functions/breadcrumb.ts';
+import type { FSListing } from '../functions/s3.ts';
 import {
   buildSortUrl,
   getSortIndicator,
   type ViewParams,
-} from '../functions/sort';
+} from '../functions/sort.ts';
 
 interface Props {
   breadCrums: BreadcrumbEntry[];
@@ -84,15 +84,15 @@ const timeIndicator = getSortIndicator('time', sort, order);
     <div class="meta">
       <div id="summary">
         <span class="meta-item">
-          <b>{fsListing.numDirectories}</b>
+          <b>{fsListing.numDirectories}</b>{' '}
           {fsListing.numDirectories === 1 ? 'directory' : 'directories'}
         </span>
         <span class="meta-item">
-          <b>{fsListing.numFiles}</b>
+          <b>{fsListing.numFiles}</b>{' '}
           {fsListing.numFiles === 1 ? 'file' : 'files'}
         </span>
         <span class="meta-item">
-          <b>{fsListing.numTotal}</b> total
+          <b>{fsListing.numTotal}</b>{' '}total
         </span>
       </div>
       <div class="layout-toggle">
@@ -114,8 +114,8 @@ const timeIndicator = getSortIndicator('time', sort, order);
     </div>
 
     {layout === 'list' ? (
-      <!-- List View -->
       <div class="listing">
+        <!-- List View -->
         <table aria-describedby="summary">
           <thead>
             <tr>
@@ -167,8 +167,8 @@ const timeIndicator = getSortIndicator('time', sort, order);
                       <span class="name">{entry.name}</span>
                     </a>
                   </td>
-                  {!!(entry as any).size || (entry as any).size === 0 ? (
-                    <td class="size" data-size={(entry as any).size}>
+                  {entry.size !== undefined ? (
+                    <td class="size" data-size={entry.size}>
                       <div class="sizebar">
                         <div class="sizebar-bar" />
                         <div class="sizebar-text">
@@ -192,8 +192,8 @@ const timeIndicator = getSortIndicator('time', sort, order);
         </table>
       </div>
     ) : (
-       <!-- Grid View -->
        <div class="listing">
+         <!-- Grid View -->
          <div class="grid">
            {fsListing.entries.map((entry) => {
              return (

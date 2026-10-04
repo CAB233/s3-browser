@@ -2,9 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import IndexPage from '../components/IndexPage.astro';
 import FourOhFour from '../components/FourOhFour.astro';
-import { getBreadcrumb } from '../functions/breadcrumb';
-import { listBucket } from '../functions/s3';
-import { parseViewParams, sortEntries } from '../functions/sort';
+import { getBreadcrumb } from '../functions/breadcrumb.ts';
+import { listBucket } from '../functions/s3.ts';
+import { parseViewParams, sortEntries } from '../functions/sort.ts';
 
 const requestPath = decodeURIComponent(Astro.url.pathname);
 const breadCrums = getBreadcrumb(requestPath);

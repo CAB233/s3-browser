@@ -8,11 +8,11 @@
 
 ## 技术栈
 
-- **框架**: [Astro](https://astro.build/)
-- **平台**: [Cloudflare Pages](https://pages.cloudflare.com/)
-- **运行时**: [Deno](https://deno.com/)
-- **S3 客户端**: [S3mini](https://github.com/good-lly/s3mini/)
-- **类型安全**: [TypeScript](https://www.typescriptlang.org/)
+- 框架: [Astro](https://astro.build/)
+- 平台: [Cloudflare Workers](https://workers.cloudflare.com/)
+- 开发工具: [Deno](https://deno.com/)
+- S3 客户端: [S3mini](https://github.com/good-lly/s3mini/)
+- 类型安全: [TypeScript](https://www.typescriptlang.org/)
 
 ## 使用方法
 
@@ -30,15 +30,19 @@
    ```
 
 3. 配置环境变量
-
-   将 `.dev.vars.example` 复制为 `.dev.vars` 并填入你的 S3 凭据。
+   ```
+   cp .dev.vars.example .dev.vars
+   ```
 
 4. 运行应用
    ```bash
    deno task dev
    ```
 
-### 部署到 Cloudflare
+   使用 `deno task check` 检查类型，`deno task build` 检查类型并构建，
+   `deno task preview` 在本地预览生产构建。
+
+### 部署到 Cloudflare Workers
 
 1. 配置 Wrangler
    ```bash
@@ -49,16 +53,15 @@
 
    在部署之前，请确保已在 Cloudflare 控制面板或通过 wrangler 设置了所需的密钥环境变量：
    ```bash
-   deno run npm:wrangler secret put BUCKET_ENDPOINT
-   deno run npm:wrangler secret put BUCKET_REGION
-   deno run npm:wrangler secret put BUCKET_ACCESS_KEY_ID
-   deno run npm:wrangler secret put BUCKET_SECRET_ACCESS_KEY
-   deno run npm:wrangler secret put BUCKET_DOWNLOAD_URL
+   deno run -A npm:wrangler secret put BUCKET_ENDPOINT
+   deno run -A npm:wrangler secret put BUCKET_REGION
+   deno run -A npm:wrangler secret put BUCKET_ACCESS_KEY_ID
+   deno run -A npm:wrangler secret put BUCKET_SECRET_ACCESS_KEY
+   deno run -A npm:wrangler secret put BUCKET_DOWNLOAD_URL
    ```
 
 3. 构建并部署
    ```bash
-   deno task build
    deno task deploy
    ```
 

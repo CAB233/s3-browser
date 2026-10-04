@@ -24,3 +24,6 @@ wrangler.toml
 
 # jetbrains setting folder
 .idea/
+
+# agents folder
+.agents

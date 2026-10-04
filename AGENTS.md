@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-This is an **Astro + Deno** project that lists S3-compatible bucket contents as a web index. It runs on **Cloudflare Pages** using the `@astrojs/cloudflare` adapter in server output mode.
+This is an **Astro 7 + Deno 2** project that lists S3-compatible bucket contents as a web index. It runs on **Cloudflare Workers** using the `@astrojs/cloudflare` adapter in server output mode.
 
 ## 2. Build Commands
 
@@ -18,15 +18,15 @@ deno task dev
 # Build with TypeScript check
 deno task build
 
-# Deploy to Cloudflare Pages
+# Deploy to Cloudflare Workers
 deno task deploy
 ```
 
 ### Development Variations
 
 ```bash
-# Cloudflare Pages dev (requires dist/ to exist)
-deno task dev:cloudflare
+# Preview the production Worker (builds dist/ first)
+deno task preview
 ```
 
 ### Environment Setup
@@ -38,12 +38,12 @@ deno task dev:cloudflare
 ### Secrets Management
 
 ```bash
-# Set secrets for Cloudflare Pages
-deno run npm:wrangler secret put BUCKET_ENDPOINT
-deno run npm:wrangler secret put BUCKET_REGION
-deno run npm:wrangler secret put BUCKET_ACCESS_KEY_ID
-deno run npm:wrangler secret put BUCKET_SECRET_ACCESS_KEY
-deno run npm:wrangler secret put BUCKET_DOWNLOAD_URL
+# Set secrets for Cloudflare Workers
+deno run -A npm:wrangler secret put BUCKET_ENDPOINT
+deno run -A npm:wrangler secret put BUCKET_REGION
+deno run -A npm:wrangler secret put BUCKET_ACCESS_KEY_ID
+deno run -A npm:wrangler secret put BUCKET_SECRET_ACCESS_KEY
+deno run -A npm:wrangler secret put BUCKET_DOWNLOAD_URL
 ```
 
 ## 3. Code Style Guidelines
@@ -52,7 +52,8 @@ deno run npm:wrangler secret put BUCKET_DOWNLOAD_URL
 
 - **Language**: TypeScript with Astro components (`.astro` files)
 - **Type Checking**: Run via `deno task build` (includes `astro check`)
-- **No TypeScript config file** - Deno handles TypeScript settings internally
+- **TypeScript config**: `tsconfig.json` extends `astro/tsconfigs/strict` for Astro type checking; `deno.json` manages dependencies and tasks
+- Keep TypeScript on version 6 for compatibility with `astro check`
 - Use explicit type annotations for function parameters and return types
 - Use `interface` for object types, `type` for unions and primitives
 - Define exported types in dedicated files or at the top of relevant files
@@ -215,7 +216,8 @@ Linting is configured in `deno.json` to include `src/` and exclude `dist/`.
 ├── public/              # Static assets
 ├── astro.config.ts      # Astro configuration
 ├── deno.json            # Deno configuration and tasks
-└── wrangler.toml        # Cloudflare Pages configuration
+├── tsconfig.json        # Astro type-checking configuration
+└── wrangler.toml        # Cloudflare Workers configuration
 ```
 
 ### Key Patterns
@@ -247,9 +249,9 @@ Linting is configured in `deno.json` to include `src/` and exclude `dist/`.
 
 ### Cloudflare Secrets
 
-Secrets must be set via Wrangler CLI for Cloudflare Pages:
+Secrets must be set via Wrangler CLI for Cloudflare Workers:
 ```bash
-deno run npm:wrangler secret put <VARIABLE_NAME>
+deno run -A npm:wrangler secret put <VARIABLE_NAME>
 ```
 
 ### README Maintenance
@@ -261,4 +263,4 @@ deno run npm:wrangler secret put <VARIABLE_NAME>
 
 ---
 
-**Last Updated**: 2026-02-17
+**Last Updated**: 2026-10-04
