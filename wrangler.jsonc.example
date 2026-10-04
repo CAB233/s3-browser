@@ -1,0 +1,8 @@
+{
+    "$schema": "./node_modules/wrangler/config-schema.json",
+    "name": "s3-browser",
+    "workers_dev": false,
+    "placement": {
+        "mode": "smart"
+    },
+}
