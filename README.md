@@ -74,7 +74,28 @@
 | `BUCKET_ACCESS_KEY_ID` | The access key ID of the bucket. | Yes | - |
 | `BUCKET_SECRET_ACCESS_KEY` | The secret access key of the bucket. | Yes | - |
 | `BUCKET_DOWNLOAD_URL` | A publicly accessible URL to download objects. | Yes | - |
+| `CACHE_BYPASS_PREFIXES` | Comma-separated directory paths that bypass listing caches. | No | Empty |
 | `DISABLE_SE_INDEX` | Set to `true` to disable search engine indexing. | No | `true` |
+
+### Cache Bypass
+
+Each path covers the directory and its descendants. Leading and trailing slashes
+are optional, and surrounding whitespace is trimmed. Set `/` to bypass caching
+for all directories. An empty value keeps the default policy: 30 seconds of
+freshness and another 60 seconds of stale content while refreshing in the
+background.
+
+Set `CACHE_BYPASS_PREFIXES` in `.dev.vars`:
+
+```dotenv
+CACHE_BYPASS_PREFIXES=/live/,/updates/
+```
+
+Or set it via wrangler:
+
+```
+deno run -A npm:wrangler secret put CACHE_BYPASS_PREFIXES
+```
 
 ## License
 

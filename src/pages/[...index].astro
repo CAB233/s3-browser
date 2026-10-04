@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import IndexPage from '../components/IndexPage.astro';
 import FourOhFour from '../components/FourOhFour.astro';
 import { getBreadcrumb } from '../functions/breadcrumb.ts';
+import { shouldBypassCache } from '../functions/cache.ts';
+import { CACHE_BYPASS_PREFIXES } from '../functions/env.ts';
 import { listBucket } from '../functions/s3.ts';
 import { parseViewParams, sortEntries } from '../functions/sort.ts';
 
@@ -19,13 +21,11 @@ const sortedEntries = sortEntries(
 );
 const sortedFsListing = { ...fsListing, entries: sortedEntries };
 
-// Cache successful listings at the edge for 30 seconds,
-// allow stale responses for an additional 60 seconds while revalidating
-if (totalCount > 0) {
-  Astro.response.headers.set(
-    'Cache-Control',
-    'public, s-maxage=30, stale-while-revalidate=60',
-  );
+if (shouldBypassCache(requestPath, CACHE_BYPASS_PREFIXES)) {
+  Astro.cache.set(false);
+  Astro.response.headers.set('Cache-Control', 'no-store');
+} else if (totalCount > 0) {
+  Astro.cache.set({ maxAge: 30, swr: 60 });
 }
 ---
 

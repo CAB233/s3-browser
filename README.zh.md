@@ -74,7 +74,24 @@
 | `BUCKET_ACCESS_KEY_ID` | 存储桶访问密钥 ID。 | 是 | - |
 | `BUCKET_SECRET_ACCESS_KEY` | 存储桶机密访问密钥。 | 是 | - |
 | `BUCKET_DOWNLOAD_URL` | 用于下载对象的公开访问 URL。 | 是 | - |
+| `CACHE_BYPASS_PREFIXES` | 绕过目录列表缓存的路径，用逗号分隔。 | 否 | 空 |
 | `DISABLE_SE_INDEX` | 设置为 `true` 以禁用搜索引擎索引。 | 否 | `true` |
+
+### 绕过缓存
+
+每个路径覆盖该目录及其子目录。路径首尾的斜杠可省略，两侧空白会自动去除。
+设置为 `/` 可让所有目录绕过缓存。留空时沿用默认策略：30 秒有效期，加上
+60 秒后台刷新期。
+
+`.dev.vars` 中设置 `CACHE_BYPASS_PREFIXES`：
+```dotenv
+CACHE_BYPASS_PREFIXES=/live/,/updates/
+```
+
+或通过 wrangler 设置：
+```
+deno run -A npm:wrangler secret put CACHE_BYPASS_PREFIXES
+```
 
 ## 许可证
 

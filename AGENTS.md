@@ -204,6 +204,7 @@ Linting is configured in `deno.json` to include `src/` and exclude `dist/`.
 │   │   ├── s3.ts              # S3 listing and entry types
 │   │   ├── sort.ts            # Sorting and view parameters
 │   │   ├── breadcrumb.ts      # Breadcrumb generation
+│   │   ├── cache.ts           # Directory cache bypass matching
 │   │   ├── utils.ts           # Utility functions
 │   │   ├── env.ts             # Environment variable exports
 │   │   └── icon.ts            # Icon helper functions
@@ -230,7 +231,7 @@ Linting is configured in `deno.json` to include `src/` and exclude `dist/`.
 
 ## 5. Environment & Secrets
 
-### Required Environment Variables
+### Environment Variables
 
 | Variable | Description | Context | Access |
 |----------|-------------|---------|--------|
@@ -239,7 +240,11 @@ Linting is configured in `deno.json` to include `src/` and exclude `dist/`.
 | `BUCKET_ACCESS_KEY_ID` | AWS access key | server | secret |
 | `BUCKET_SECRET_ACCESS_KEY` | AWS secret key | server | secret |
 | `BUCKET_DOWNLOAD_URL` | Public download base URL | server | secret |
+| `CACHE_BYPASS_PREFIXES` | Optional comma-separated cache bypass directories | server | secret |
 | `DISABLE_SE_INDEX` | Disable search engines | server | public |
+
+`CACHE_BYPASS_PREFIXES` uses server-secret access for runtime retrieval and defaults
+to an empty string. Each path matches a directory and its descendants.
 
 ### Configuration Files
 

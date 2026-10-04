@@ -1,9 +1,13 @@
 import { defineConfig, envField } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
+import { cacheCloudflare } from '@astrojs/cloudflare/cache';
 
 export default defineConfig({
   output: 'server',
   adapter: cloudflare(),
+  cache: {
+    provider: cacheCloudflare(),
+  },
   vite: {
     build: {
       minify: true,
@@ -24,6 +28,11 @@ export default defineConfig({
       BUCKET_DOWNLOAD_URL: envField.string({
         context: 'server',
         access: 'secret',
+      }),
+      CACHE_BYPASS_PREFIXES: envField.string({
+        context: 'server',
+        access: 'secret',
+        default: '',
       }),
       DISABLE_SE_INDEX: envField.boolean({
         context: 'server',
