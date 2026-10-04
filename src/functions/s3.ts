@@ -1,4 +1,4 @@
-import { S3mini } from 's3mini';
+import { S3mini, S3NetworkError, S3ServiceError } from 's3mini';
 import {
   concatArrays,
   lstrip,
@@ -150,27 +150,18 @@ export const listAllObjects = async (prefix?: string): Promise<S3Object[]> => {
   try {
     const objects = await client.listObjects(undefined, prefix);
     return objects ?? [];
-  } catch (e) {
-    const err = e as Error & {
-      status?: number;
-      serviceCode?: string;
-      code?: string;
-      body?: string;
-    };
-    if (err.status !== undefined && err.serviceCode !== undefined) {
+  } catch (err) {
+    if (err instanceof S3ServiceError) {
       console.error(
         `S3 service error ${err.status}: ${err.serviceCode}`,
         err.body,
       );
-    } else if (
-      err.code &&
-      ['ENOTFOUND', 'EAI_AGAIN', 'ETIMEDOUT', 'ECONNREFUSED'].includes(err.code)
-    ) {
+    } else if (err instanceof S3NetworkError) {
       console.error(`S3 network error: ${err.code}`);
     } else {
-      console.error('Unexpected error listing objects:', e);
+      console.error('Unexpected error listing objects:', err);
     }
-    throw e;
+    throw err;
   }
 };
 
