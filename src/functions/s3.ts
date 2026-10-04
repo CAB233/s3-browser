@@ -1,12 +1,6 @@
 import { S3mini, S3NetworkError, S3ServiceError } from 's3mini';
-import {
-  concatArrays,
-  lstrip,
-  parseDate,
-  rstrip,
-  strip,
-  toHumanReadableSize,
-} from './utils.ts';
+import type { ListObject } from 's3mini';
+import { lstrip, rstrip, strip, toHumanReadableSize } from './utils.ts';
 import {
   BUCKET_ACCESS_KEY_ID,
   BUCKET_DOWNLOAD_URL,
@@ -35,12 +29,12 @@ export type Entry =
     extension: string;
   };
 
-export type FSListing = {
+export interface FSListing {
   entries: Entry[];
   numDirectories: number;
   numFiles: number;
   numTotal: string;
-};
+}
 
 const getExtension = (filename: string): string => {
   const parts = filename.split('.');
@@ -58,103 +52,96 @@ const getS3Client = (): S3mini => {
       endpoint: BUCKET_ENDPOINT,
       accessKeyId: BUCKET_ACCESS_KEY_ID,
       secretAccessKey: BUCKET_SECRET_ACCESS_KEY,
+      requestAbortTimeout: 10_000,
     });
   }
   return s3Client;
 };
 
-const sortAndGetListing = (entries: Entry[]): FSListing => {
-  const directories = entries
-    .filter((entry) => entry.type === 'directory')
-    .sort((a, b) => {
-      return a.name.localeCompare(b.name);
-    });
-  const files = entries
-    .filter((entry) => entry.type === 'file')
-    .sort((a, b) => {
-      return a.name.localeCompare(b.name);
-    });
-  const totalSize = files.reduce((sum, file) => sum + (file.size || 0), 0);
+const objectListToFS = (
+  objects: ListObject[],
+  currentPath: string,
+): FSListing => {
+  const downloadUrl = rstrip(BUCKET_DOWNLOAD_URL, '/') + '/';
+  const entries: Entry[] = [];
+  const seen = new Set<string>();
+  let numDirectories = 0;
+  let numFiles = 0;
+  let totalSize = 0;
+
+  for (const obj of objects) {
+    const fullPath = '/' + lstrip(obj.Key, '/');
+    if (!fullPath.startsWith(currentPath)) {
+      continue;
+    }
+
+    const shortKey = fullPath.substring(currentPath.length);
+    // A folder marker matching the current path has no child name.
+    if (!shortKey) {
+      continue;
+    }
+
+    const slashIndex = shortKey.indexOf('/');
+    const isDirectory = slashIndex !== -1;
+    const name = isDirectory ? shortKey.substring(0, slashIndex) : shortKey;
+    const entryKey = (isDirectory ? 'directory:' : 'file:') + name;
+    if (seen.has(entryKey)) {
+      continue;
+    }
+    seen.add(entryKey);
+
+    if (isDirectory) {
+      entries.push({
+        type: 'directory',
+        anchor: name + '/',
+        name,
+      });
+      numDirectories += 1;
+    } else {
+      entries.push({
+        type: 'file',
+        anchor: downloadUrl + lstrip(fullPath, '/'),
+        name,
+        fullPath,
+        lastModified: obj.LastModified,
+        size: obj.Size,
+        humanReadableSize: toHumanReadableSize(obj.Size),
+        extension: getExtension(name),
+      });
+      numFiles += 1;
+      totalSize += obj.Size;
+    }
+  }
+
   return {
-    entries: concatArrays<Entry>(directories, files),
-    numDirectories: directories.length,
-    numFiles: files.length,
+    entries,
+    numDirectories,
+    numFiles,
     numTotal: toHumanReadableSize(totalSize),
   };
 };
 
-interface S3Object {
-  Key: string;
-  Size: number;
-  LastModified: Date;
-}
-
-const objectListToFS = (
-  objects: S3Object[],
-  currentPath: string,
-): FSListing => {
-  const dlUrl = BUCKET_DOWNLOAD_URL;
-  const strippedKeyObjects = objects
-    .filter((obj) => !!obj.Key)
-    .map((obj) => {
-      return {
-        ...obj,
-        Key: '/' + lstrip(obj.Key || '', '/'),
-      };
-    })
-    .filter((obj) => obj.Key?.startsWith(currentPath))
-    .map((obj) => {
-      return {
-        ...obj,
-        ShortKey: obj.Key?.substring(currentPath.length) || '',
-      };
-    });
-
-  const entries = strippedKeyObjects.map((obj): Entry => {
-    if (obj.ShortKey?.includes('/')) {
-      return {
-        type: 'directory',
-        anchor: obj.ShortKey.split('/')[0] + '/',
-        name: obj.ShortKey.split('/')[0],
-      };
-    } else {
-      // Ensure size is converted to a number to prevent "toFixed is not a function" error
-      const size = typeof obj.Size === 'number'
-        ? obj.Size
-        : parseInt(obj.Size) || 0;
-
-      return {
-        type: 'file',
-        anchor: rstrip(dlUrl, '/') + '/' + lstrip(obj.Key || '', '/'),
-        name: obj.ShortKey,
-        fullPath: obj.Key || '',
-        lastModified: parseDate(obj.LastModified),
-        size: size,
-        humanReadableSize: toHumanReadableSize(size),
-        extension: getExtension(obj.ShortKey),
-      };
-    }
-  });
-  const unsortedEntries = entries.filter((entry, index, self) => {
-    return (
-      index ===
-        self.findIndex((t) => t.type === entry.type && t.name === entry.name)
-    );
-  });
-  return sortAndGetListing(unsortedEntries);
-};
-
-export const listAllObjects = async (prefix?: string): Promise<S3Object[]> => {
+const listDirectoryObjects = async (prefix: string): Promise<ListObject[]> => {
   const client = getS3Client();
 
   try {
-    const objects = await client.listObjects(undefined, prefix);
-    return objects ?? [];
+    // The S3 grouping delimiter is passed in opts; listObjects handles paging.
+    const objects = await client.listObjects('/', prefix, undefined, {
+      delimiter: '/',
+    });
+    if (objects === null) {
+      throw new S3ServiceError(
+        'S3 bucket was not found. Check BUCKET_ENDPOINT.',
+        404,
+        'NoSuchBucket',
+      );
+    }
+    return objects;
   } catch (err) {
     if (err instanceof S3ServiceError) {
       console.error(
         `S3 service error ${err.status}: ${err.serviceCode}`,
-        err.body,
+        err.body ?? err.message,
       );
     } else if (err instanceof S3NetworkError) {
       console.error(`S3 network error: ${err.code}`);
@@ -166,13 +153,8 @@ export const listAllObjects = async (prefix?: string): Promise<S3Object[]> => {
 };
 
 export const listBucket = async (path: string): Promise<FSListing> => {
-  const normalizedPathT = '/' + strip(path, '/') + '/';
-  const normalizedPath = normalizedPathT === '//' ? '/' : normalizedPathT;
-  // At root, fetch everything (prefix filtering would miss top-level dirs).
-  // Otherwise strip the leading slash to get a plain S3 prefix, e.g. "photos/2024/".
-  const s3Prefix = normalizedPath === '/'
-    ? undefined
-    : lstrip(normalizedPath, '/');
-  const allObjects = await listAllObjects(s3Prefix);
-  return objectListToFS(allObjects, normalizedPath);
+  const directory = strip(path, '/');
+  const prefix = directory ? directory + '/' : '';
+  const objects = await listDirectoryObjects(prefix);
+  return objectListToFS(objects, '/' + prefix);
 };

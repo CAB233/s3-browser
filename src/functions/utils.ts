@@ -16,20 +16,6 @@ export const strip = (str: string, trim: string): string => {
   return lstrip(rstrip(str, trim), trim);
 };
 
-export const concatArrays = <T>(arr1: T[], arr2: T[]): T[] => {
-  return [...arr1, ...arr2];
-};
-
-export const parseDate = (date: string | Date | undefined): Date => {
-  if (date instanceof Date) {
-    return date;
-  }
-  if (!date) {
-    return new Date();
-  }
-  return new Date(date);
-};
-
 export const toHumanReadableSize = (size: number): string => {
   if (size === 0) {
     return '0 B';

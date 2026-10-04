@@ -105,7 +105,7 @@ deno fmt
 
 ```typescript
 import { S3mini } from 's3mini';
-import { parseDate, strip } from './utils.ts';
+import { strip } from './utils.ts';
 import type { Entry, FSListing } from './s3.ts';
 ```
 
