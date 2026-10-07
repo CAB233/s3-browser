@@ -12,6 +12,9 @@ const requestPath = decodeURIComponent(Astro.url.pathname);
 const breadCrums = getBreadcrumb(requestPath);
 const fsListing = await listBucket(requestPath);
 const totalCount = fsListing.numDirectories + fsListing.numFiles;
+if (totalCount === 0) {
+  Astro.response.status = 404;
+}
 const title = totalCount > 0 ? `${requestPath}` : '404 - Not Found';
 const viewParams = parseViewParams(Astro.url);
 const sortedEntries = sortEntries(
