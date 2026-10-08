@@ -1,5 +1,9 @@
 ---
 import Icon from './Icon.astro';
+
+import { isImage } from '../functions/icon.ts';
+import UpArrow from '../icons/up-arrow.svg?raw';
+import DownArrow from '../icons/down-arrow.svg?raw';
 import Up from '../icons/up.svg?raw';
 import CF from '../icons/cloudflare.svg?raw';
 import Search from '../icons/search.svg?raw';
@@ -9,7 +13,7 @@ import type { BreadcrumbEntry } from '../functions/breadcrumb.ts';
 import type { FSListing } from '../functions/s3.ts';
 import {
   buildSortUrl,
-  getSortIndicator,
+  paginateEntries,
   type ViewParams,
 } from '../functions/sort.ts';
 
@@ -22,17 +26,21 @@ interface Props {
 
 const { breadCrums, fsListing, requestPath, viewParams } = Astro.props;
 const { layout, sort, order } = viewParams;
+const urlPath = Astro.url.pathname;
+const { entries } = paginateEntries(fsListing.entries, viewParams);
+const getSortIndicator = (field: string, currentSort: string, currentOrder: string): string =>
+  field === currentSort ? (currentOrder === 'asc' ? UpArrow : DownArrow) : '';
 
 // Build URLs for layout toggle
 const listUrl = buildSortUrl(
-  requestPath,
+  urlPath,
   viewParams,
   undefined,
   undefined,
   'list',
 );
 const gridUrl = buildSortUrl(
-  requestPath,
+  urlPath,
   viewParams,
   undefined,
   undefined,
@@ -40,9 +48,10 @@ const gridUrl = buildSortUrl(
 );
 
 // Build URLs for sort headers
-const nameSortUrl = buildSortUrl(requestPath, viewParams, 'name');
-const sizeSortUrl = buildSortUrl(requestPath, viewParams, 'size');
-const timeSortUrl = buildSortUrl(requestPath, viewParams, 'time');
+const nameSortUrl = buildSortUrl(urlPath, viewParams, 'name');
+const directorySortUrl = buildSortUrl(urlPath, viewParams, 'namedirfirst');
+const sizeSortUrl = buildSortUrl(urlPath, viewParams, 'size');
+const timeSortUrl = buildSortUrl(urlPath, viewParams, 'time');
 
 // Get sort indicators
 const nameIndicator = getSortIndicator('name', sort, order);
@@ -68,18 +77,7 @@ const timeIndicator = getSortIndicator('time', sort, order);
   </div>
 </header>
 
-{layout === 'grid' && (
-  <style>
-    .wrapper {
-      max-width: none;
-    }
-    main {
-      margin-top: 1px;
-    }
-  </style>
-)}
-
-<div class="wrapper">
+<div class:list={['wrapper', { 'grid-wrapper': layout === 'grid' }]}>
   <main data-view={layout}>
     <div class="meta">
       <div id="summary">
@@ -95,7 +93,7 @@ const timeIndicator = getSortIndicator('time', sort, order);
           <b>{fsListing.numTotal}</b>{' '}total
         </span>
       </div>
-      <div class="layout-toggle">
+
         <a
           href={listUrl}
           class={`layout ${layout === 'list' ? 'current' : ''}`}
@@ -110,7 +108,6 @@ const timeIndicator = getSortIndicator('time', sort, order);
           <Fragment set:html={Grid} />
           Grid
         </a>
-      </div>
     </div>
 
     {layout === 'list' ? (
@@ -121,13 +118,20 @@ const timeIndicator = getSortIndicator('time', sort, order);
             <tr>
               <th></th>
               <th>
-                <a href={nameSortUrl} class="sort-header"><Fragment
+                <a href={directorySortUrl}
+                  class:list={['icon', { sort: sort !== 'namedirfirst' }]}
+                  aria-label="Sort names with directories first" title="Directories first">
+                  <Fragment set:html={sort === 'namedirfirst' && order === 'desc' ? DownArrow : UpArrow} />
+                </a>
+                <a href={nameSortUrl} class="sort-header">Name<Fragment
                     set:html={nameIndicator}
-                  />Name</a>
+                  /></a>
                 <div class="filter-container">
                   <Fragment set:html={Search} />
-                  <input type="search" placeholder="Search" id="filter" />
+                  <input type="search" placeholder="Search" id="filter"
+                    aria-label="Filter files and directories" value={viewParams.filter} />
                 </div>
+
               </th>
               <th>
                 <a href={sizeSortUrl} class="sort-header">Size<Fragment
@@ -157,14 +161,16 @@ const timeIndicator = getSortIndicator('time', sort, order);
                 <td class="hideable" />
               </tr>
             )}
-            {fsListing.entries.map((entry) => {
+            {entries.map((entry) => {
               return (
                 <tr class="file">
                   <td />
                   <td>
                     <a href={entry.anchor}>
                       <Icon {entry} />
-                      <span class="name">{entry.name}</span>
+                      <span class="name">{
+                        entry.type === 'directory' ? `${entry.name}/` : entry.name
+                      }</span>
                     </a>
                   </td>
                   {entry.size !== undefined ? (
@@ -195,12 +201,16 @@ const timeIndicator = getSortIndicator('time', sort, order);
        <div class="listing">
          <!-- Grid View -->
          <div class="grid">
-           {fsListing.entries.map((entry) => {
+           {entries.map((entry) => {
              return (
                <div class="entry">
-                 <a href={entry.anchor}>
-                   <Icon {entry} />
-                   <span class="name">{entry.name}</span>
+                 <a href={entry.anchor} title={entry.lastModified?.toISOString()}>
+                   {isImage(entry) ? (
+                     <img src={entry.anchor} alt="" loading="lazy" />
+                   ) : <Icon {entry} />}
+                   <span class="name">{
+                     entry.type === 'directory' ? `${entry.name}/` : entry.name
+                   }</span>
                    {entry.type === 'file' && (
                      <span class="size">{entry.humanReadableSize}</span>
                    )}
@@ -225,93 +235,43 @@ const timeIndicator = getSortIndicator('time', sort, order);
   </a>
 </footer>
 
-<script is:inline>
+<script>
   // @license magnet:?xt=urn:btih:8e4f440f4c65981c5bf93c76d35135ba5064d8b7&dn=apache-2.0.txt Apache-2.0
-  const filterEl = document.getElementById('filter');
+  const filterEl = document.querySelector<HTMLInputElement>('#filter');
+  const rows = Array.from(document.querySelectorAll<HTMLTableRowElement>('tr.file'));
+  const names = rows.map((row) =>
+    row.querySelector('.name')?.textContent?.trim().toLowerCase() ?? ''
+  );
   filterEl?.focus({ preventScroll: true });
 
-  function initPage() {
-    if (filterEl) {
-      const filterParam = new URL(window.location.href).searchParams.get(
-        'filter',
-      );
-      if (filterParam) {
-        filterEl.value = filterParam;
-      }
-    }
-    filter();
-
-    // fill in size bars
-    const sizeEls = document.querySelectorAll('.size[data-size]');
-    let largest = 0;
-    sizeEls.forEach(
-      (el) => (largest = Math.max(largest, Number(el.dataset.size))),
-    );
-    sizeEls.forEach((el) => {
-      const size = Number(el.dataset.size);
-      const sizebar = el.querySelector('.sizebar-bar');
-      if (sizebar) {
-        sizebar.style.width = `${(size / largest) * 100}%`;
-      }
-    });
-  }
-
-  function filter() {
+  function filter(): void {
     if (!filterEl) return;
-    const q = filterEl.value.trim().toLowerCase();
-    // For list view
-    document.querySelectorAll('tr.file').forEach(function (el) {
-      if (!q) {
-        el.style.display = '';
-        return;
-      }
-      const nameEl = el.querySelector('.name');
-      const nameVal = nameEl?.textContent?.trim().toLowerCase() || '';
-      if (nameVal.indexOf(q) !== -1) {
-        el.style.display = '';
-      } else {
-        el.style.display = 'none';
-      }
-    });
-    // For grid view
-    document.querySelectorAll('.grid .entry').forEach(function (el) {
-      if (!q) {
-        el.style.display = '';
-        return;
-      }
-      const nameEl = el.querySelector('.name');
-      const nameVal = nameEl?.textContent?.trim().toLowerCase() || '';
-      if (nameVal.indexOf(q) !== -1) {
-        el.style.display = '';
-      } else {
-        el.style.display = 'none';
-      }
+    const query = filterEl.value.trim().toLowerCase();
+    rows.forEach((row, index) => {
+      const match = names[index].includes(query);
+      row.hidden = !match;
     });
   }
 
-  const filterElem = document.getElementById('filter');
-  if (filterElem) {
-    filterElem.addEventListener('keyup', filter);
-  }
+  filterEl?.addEventListener('keyup', filter);
+  filter();
 
-  window.addEventListener('load', initPage);
-
-  function localizeDatetime(e) {
-    if (e.textContent === undefined) {
-      return;
-    }
-    var d = new Date(e.getAttribute('datetime'));
-    if (isNaN(d)) {
-      d = new Date(e.textContent);
-      if (isNaN(d)) {
-        return;
-      }
-    }
-    e.textContent = d.toLocaleString();
-  }
-  var timeList = Array.prototype.slice.call(
-    document.getElementsByTagName('time'),
+  const sizeEls = Array.from(document.querySelectorAll<HTMLElement>('.size[data-size]'));
+  const largest = sizeEls.reduce(
+    (max, el) => Math.max(max, Number(el.dataset.size)),
+    0,
   );
-  timeList.forEach(localizeDatetime);
+  sizeEls.forEach((el) => {
+    const bar = el.querySelector<HTMLElement>('.sizebar-bar');
+    if (bar) {
+      bar.style.width = `${
+        largest ? Number(el.dataset.size) / largest * 100 : 0
+      }%`;
+    }
+  });
+  document.querySelectorAll('time').forEach((el) => {
+    const date = new Date(el.dateTime);
+    if (!Number.isNaN(date.getTime())) el.textContent = date.toLocaleString();
+  });
   // @license-end
 </script>

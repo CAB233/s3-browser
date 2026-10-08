@@ -1,5 +1,5 @@
 ---
-import { DISABLE_SE_INDEX } from '../functions/env.ts';
+import { BUCKET_DOWNLOAD_URL, DISABLE_SE_INDEX } from '../functions/env.ts';
 
 interface Props {
   title: string;
@@ -7,10 +7,13 @@ interface Props {
 
 const { title } = Astro.props;
 const disableSEIndexing = DISABLE_SE_INDEX;
+Astro.csp?.insertDirective(`img-src 'self' ${new URL(BUCKET_DOWNLOAD_URL).origin}`);
+// frame-ancestors must be sent as an HTTP header, rather than a meta policy.
+Astro.response.headers.set('Content-Security-Policy', "frame-ancestors 'self'");
 ---
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>{title}</title>
     <link
@@ -79,26 +82,6 @@ const disableSEIndexing = DISABLE_SE_INDEX;
   .go-up {
     color: #333;
     text-decoration: none;
-  }
-
-  /*#layout-list,
-  #layout-grid {
-    cursor: pointer;
-  }*/
-
-  .layout-toggle {
-    display: flex;
-    gap: 1em;
-  }
-
-  .layout {
-    display: flex;
-    align-items: center;
-    gap: 0.2em;
-  }
-
-  .sort-header svg {
-    margin-right: 0.25em;
   }
 
   .wrapper {
@@ -221,6 +204,10 @@ const disableSEIndexing = DISABLE_SE_INDEX;
     margin-right: auto;
   }
 
+  [hidden] { display: none !important; }
+
+  .grid-wrapper { max-width: none; }
+  main[data-view="grid"] { margin-top: 1px; }
   .filter-container {
     position: relative;
     display: inline-block;

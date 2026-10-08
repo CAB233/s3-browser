@@ -4,6 +4,19 @@ import { cacheCloudflare } from '@astrojs/cloudflare/cache';
 
 export default defineConfig({
   output: 'server',
+  markdown: {
+    syntaxHighlight: false,
+  },
+  security: {
+    csp: {
+      directives: [
+        "default-src 'self'",
+        "object-src 'none'",
+        "base-uri 'none'",
+        "form-action 'self'",
+      ],
+    },
+  },
   session: false,
   adapter: cloudflare(),
   cache: {

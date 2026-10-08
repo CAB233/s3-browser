@@ -1,6 +1,12 @@
 import { S3mini, S3NetworkError, S3ServiceError } from 's3mini';
 import type { ListObject } from 's3mini';
-import { lstrip, rstrip, strip, toHumanReadableSize } from './utils.ts';
+import {
+  encodePath,
+  lstrip,
+  rstrip,
+  strip,
+  toHumanReadableSize,
+} from './utils.ts';
 import {
   BUCKET_ACCESS_KEY_ID,
   BUCKET_DOWNLOAD_URL,
@@ -41,7 +47,7 @@ const getExtension = (filename: string): string => {
   if (parts.length === 1 || (filename.startsWith('.') && parts.length === 2)) {
     return '';
   }
-  return parts[parts.length - 1];
+  return parts[parts.length - 1].toLowerCase();
 };
 
 let s3Client: S3mini | null = null;
@@ -93,14 +99,14 @@ const objectListToFS = (
     if (isDirectory) {
       entries.push({
         type: 'directory',
-        anchor: name + '/',
+        anchor: './' + encodeURIComponent(name) + '/',
         name,
       });
       numDirectories += 1;
     } else {
       entries.push({
         type: 'file',
-        anchor: downloadUrl + lstrip(fullPath, '/'),
+        anchor: downloadUrl + encodePath(lstrip(fullPath, '/')),
         name,
         fullPath,
         lastModified: obj.LastModified,

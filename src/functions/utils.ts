@@ -28,3 +28,7 @@ export const toHumanReadableSize = (size: number): string => {
   }
   return `${size.toFixed(1)} ${units[unitIndex]}`;
 };
+
+/** Encode raw S3 keys while preserving their directory separators. */
+export const encodePath = (path: string): string =>
+  path.split('/').map(encodeURIComponent).join('/');

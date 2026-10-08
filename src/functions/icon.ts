@@ -40,6 +40,7 @@ const extensionMapping: { [key: string]: string } = {
   apk: Package,
   appimage: Package,
   avi: Video,
+  avif: Image,
   bak: Database,
   bash: Shell,
   bat: Shell,
@@ -166,3 +167,6 @@ export const getIcon = (entry: Entry): string => {
   }
   return extensionMapping[entry.extension] || Default;
 };
+
+export const isImage = (entry: Entry): boolean =>
+  entry.type === 'file' && extensionMapping[entry.extension] === Image;

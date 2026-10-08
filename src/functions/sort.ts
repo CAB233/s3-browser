@@ -1,8 +1,6 @@
 import type { Entry } from './s3.ts';
-import Up from '../icons/up-arrow.svg?raw';
-import Down from '../icons/down-arrow.svg?raw';
 
-export type SortField = 'name' | 'size' | 'time';
+export type SortField = 'name' | 'namedirfirst' | 'size' | 'time';
 export type SortOrder = 'asc' | 'desc';
 export type LayoutType = 'list' | 'grid';
 
@@ -10,7 +8,16 @@ export interface ViewParams {
   layout: LayoutType;
   sort: SortField;
   order: SortOrder;
+  filter: string;
+  limit: number;
+  offset: number;
+  query: string;
 }
+
+const parseCount = (value: string | null): number => {
+  const number = Number(value);
+  return Number.isSafeInteger(number) && number > 0 ? number : 0;
+};
 
 export const parseViewParams = (url: URL): ViewParams => {
   const layout = url.searchParams.get('layout');
@@ -19,10 +26,14 @@ export const parseViewParams = (url: URL): ViewParams => {
 
   return {
     layout: layout === 'grid' ? 'grid' : 'list',
-    sort: ['name', 'size', 'time'].includes(sort || '')
+    sort: ['name', 'namedirfirst', 'size', 'time'].includes(sort || '')
       ? (sort as SortField)
-      : 'name',
+      : 'namedirfirst',
     order: order === 'desc' ? 'desc' : 'asc',
+    filter: url.searchParams.get('filter') || '',
+    limit: parseCount(url.searchParams.get('limit')),
+    offset: parseCount(url.searchParams.get('offset')),
+    query: url.search,
   };
 };
 
@@ -33,7 +44,7 @@ export const buildSortUrl = (
   newOrder?: SortOrder,
   newLayout?: LayoutType,
 ): string => {
-  const params = new URLSearchParams();
+  const params = new URLSearchParams(currentParams.query);
 
   const layout = newLayout ?? currentParams.layout;
   const sort = newSort ?? currentParams.sort;
@@ -44,9 +55,9 @@ export const buildSortUrl = (
     order = currentParams.order === 'asc' ? 'desc' : 'asc';
   }
 
-  if (layout !== 'list') params.set('layout', layout);
-  if (sort !== 'name') params.set('sort', sort);
-  if (order !== 'asc') params.set('order', order);
+  params.set('layout', layout);
+  params.set('sort', sort);
+  params.set('order', order);
 
   const queryString = params.toString();
   return queryString ? `${basePath}?${queryString}` : basePath;
@@ -64,8 +75,12 @@ export const sortEntries = (
     let result = 0;
 
     switch (sort) {
+      case 'namedirfirst':
       case 'name': {
-        result = a.name.localeCompare(b.name);
+        result = a.name.localeCompare(b.name, 'en', {
+          numeric: true,
+          sensitivity: 'base',
+        });
         break;
       }
       case 'size': {
@@ -85,20 +100,31 @@ export const sortEntries = (
     return order === 'desc' ? -result : result;
   };
 
-  // Directories first, then files, both sorted
+  if (sort === 'name') return [...entries].sort(compareFunc);
+
+  // Preserve directory-first ordering for size and time as well.
   return [
     ...directories.sort(compareFunc),
     ...files.sort(compareFunc),
   ];
 };
 
-export const getSortIndicator = (
-  field: SortField,
-  currentSort: SortField,
-  currentOrder: SortOrder,
-): string => {
-  if (field !== currentSort) return '';
-  const ascSvg = Up;
-  const descSvg = Down;
-  return currentOrder === 'asc' ? ascSvg : descSvg;
+export interface EntryPage {
+  entries: Entry[];
+  offset: number;
+  total: number;
+}
+
+export const paginateEntries = (
+  entries: Entry[],
+  params: ViewParams,
+): EntryPage => {
+  const offset = params.offset;
+  return {
+    entries: params.limit
+      ? entries.slice(offset, offset + params.limit)
+      : entries.slice(offset),
+    offset,
+    total: entries.length,
+  };
 };
