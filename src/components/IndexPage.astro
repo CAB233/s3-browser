@@ -1,7 +1,8 @@
 ---
 import Icon from './Icon.astro';
 
-import { isImage } from '../functions/icon.ts';
+import { getIconDefinition, isImage } from '../functions/icon.ts';
+import type { IconDefinition } from '../functions/icon.ts';
 import UpArrow from '../icons/up-arrow.svg?raw';
 import DownArrow from '../icons/down-arrow.svg?raw';
 import Up from '../icons/up.svg?raw';
@@ -28,6 +29,20 @@ const { breadCrums, fsListing, requestPath, viewParams } = Astro.props;
 const { layout, sort, order } = viewParams;
 const urlPath = Astro.url.pathname;
 const { entries } = paginateEntries(fsListing.entries, viewParams);
+const iconDefinitions = new Map<string, IconDefinition>();
+for (const entry of entries) {
+  if (layout === 'grid' && isImage(entry)) continue;
+  const icon = getIconDefinition(entry);
+  iconDefinitions.set(icon.id, icon);
+}
+const dateTimeFormatter = new Intl.DateTimeFormat(undefined, {
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric',
+});
 const getSortIndicator = (field: string, currentSort: string, currentOrder: string): string =>
   field === currentSort ? (currentOrder === 'asc' ? UpArrow : DownArrow) : '';
 
@@ -79,6 +94,16 @@ const timeIndicator = getSortIndicator('time', sort, order);
 
 <div class:list={['wrapper', { 'grid-wrapper': layout === 'grid' }]}>
   <main data-view={layout}>
+    <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg"
+      width="0" height="0" aria-hidden="true" focusable="false">
+      <defs>
+        {Array.from(iconDefinitions.values()).map((icon) => (
+          <symbol id={icon.id} viewBox="0 0 24 24">
+            <Fragment set:html={icon.content} />
+          </symbol>
+        ))}
+      </defs>
+    </svg>
     <div class="meta">
       <div id="summary">
         <span class="meta-item">
@@ -186,7 +211,7 @@ const timeIndicator = getSortIndicator('time', sort, order);
                   {(!!entry.lastModified && (
                     <td class="timestamp hideable">
                       <time datetime={entry.lastModified?.toISOString()}>
-                        {entry.lastModified?.toLocaleString()}
+                        {dateTimeFormatter.format(entry.lastModified)}
                       </time>
                     </td>
                   )) || <td class="timestamp hideable">&mdash;</td>}
@@ -206,7 +231,7 @@ const timeIndicator = getSortIndicator('time', sort, order);
                <div class="entry">
                  <a href={entry.anchor} title={entry.lastModified?.toISOString()}>
                    {isImage(entry) ? (
-                     <img src={entry.anchor} alt="" loading="lazy" />
+                     <img src={entry.anchor} alt="" loading="lazy" decoding="async" />
                    ) : <Icon {entry} />}
                    <span class="name">{
                      entry.type === 'directory' ? `${entry.name}/` : entry.name
@@ -243,13 +268,16 @@ const timeIndicator = getSortIndicator('time', sort, order);
     row.querySelector('.name')?.textContent?.trim().toLowerCase() ?? ''
   );
   filterEl?.focus({ preventScroll: true });
+  let previousQuery: string | undefined;
 
   function filter(): void {
     if (!filterEl) return;
     const query = filterEl.value.trim().toLowerCase();
+    if (query === previousQuery) return;
+    previousQuery = query;
     rows.forEach((row, index) => {
-      const match = names[index].includes(query);
-      row.hidden = !match;
+      const hidden = !names[index].includes(query);
+      if (row.hidden !== hidden) row.hidden = hidden;
     });
   }
 
@@ -269,9 +297,20 @@ const timeIndicator = getSortIndicator('time', sort, order);
       }%`;
     }
   });
-  document.querySelectorAll('time').forEach((el) => {
-    const date = new Date(el.dateTime);
-    if (!Number.isNaN(date.getTime())) el.textContent = date.toLocaleString();
-  });
+  const times = document.querySelectorAll('time');
+  if (times.length) {
+    const formatter = new Intl.DateTimeFormat(undefined, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+    });
+    times.forEach((el) => {
+      const date = new Date(el.dateTime);
+      if (!Number.isNaN(date.getTime())) el.textContent = formatter.format(date);
+    });
+  }
   // @license-end
 </script>

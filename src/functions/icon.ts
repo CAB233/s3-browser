@@ -33,6 +33,12 @@ import Video from '../icons/video.svg?raw';
 import Worksheet from '../icons/worksheet.svg?raw';
 import Xsv from '../icons/xsv.svg?raw';
 
+export interface IconDefinition {
+  id: string;
+  className: string;
+  content: string;
+}
+
 const extensionMapping: { [key: string]: string } = {
   '3gp': Video,
   '7z': Archive,
@@ -158,6 +164,20 @@ const extensionMapping: { [key: string]: string } = {
   zst: Archive,
 };
 
+// Parse the trusted local SVG assets once per Worker instance.
+const iconDefinitions = new Map<string, IconDefinition>(
+  [...new Set([Directory, Scroll, Default, ...Object.values(extensionMapping)])]
+    .map((svg) => {
+      const className = svg.match(/class="([^"]+)"/)?.[1];
+      if (!className) throw new Error('File icon is missing its CSS classes.');
+      return [svg, {
+        id: `entry-${className.split(' ').at(-1)}`,
+        className,
+        content: svg.slice(svg.indexOf('>') + 1, svg.lastIndexOf('</svg>')),
+      }];
+    }),
+);
+
 export const getIcon = (entry: Entry): string => {
   if (entry.type === 'directory') {
     return Directory;
@@ -167,6 +187,9 @@ export const getIcon = (entry: Entry): string => {
   }
   return extensionMapping[entry.extension] || Default;
 };
+
+export const getIconDefinition = (entry: Entry): IconDefinition =>
+  iconDefinitions.get(getIcon(entry))!;
 
 export const isImage = (entry: Entry): boolean =>
   entry.type === 'file' && extensionMapping[entry.extension] === Image;
