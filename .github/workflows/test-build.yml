@@ -6,7 +6,7 @@ on:
 jobs:
   test:
     if: startsWith(github.head_ref, 'renovate/')
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
       - uses: denoland/setup-deno@v2
