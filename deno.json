@@ -9,11 +9,11 @@
   },
   "imports": {
     "@astrojs/check": "npm:@astrojs/check@^0.9.10",
-    "@astrojs/cloudflare": "npm:@astrojs/cloudflare@^14.3.3",
-    "astro": "npm:astro@^7.3.5",
-    "s3mini": "npm:s3mini@^1.0.2",
+    "@astrojs/cloudflare": "npm:@astrojs/cloudflare@^14.4.0",
+    "astro": "npm:astro@^7.4.0",
+    "s3mini": "npm:s3mini@^1.0.3",
     "typescript": "npm:typescript@^6.0.3",
-    "wrangler": "npm:wrangler@^4.147.0"
+    "wrangler": "npm:wrangler@^4.151.1"
   },
   "fmt": {
     "useTabs": false,
